@@ -1,8 +1,7 @@
 // ==UserScript==
 // @name         EGO MAUL Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
-// @updateURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20MAUL%20Enhancement.user.js
-// @downloadURL  https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20MAUL%20Enhancement.user.js
+// @updateURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/Enhance_MAUL.js
 // @version      STABLE-1.0.1
 // @description  Add various enhancements & QOL additions to the EdgeGamers MAUL page that are beneficial for CS Leadership members.
 // @author       blank_dvth, Left, Skle, MSWS
@@ -22,6 +21,7 @@ const knownAdmins = {}; // Known admin list
 
 /**
  * Creates a preset div
+ *
  * @returns {HTMLDivElement} Div to add presets to
  */
 function createPresetDiv() {
@@ -37,14 +37,14 @@ function createPresetDiv() {
     subtitle.style.paddingLeft = "15px";
     child.insertBefore(div, document.querySelector("form"));
     child.insertBefore(subtitle, div);
-    
     return div;
 }
 
 /**
  * Creates a preset button
+ *
  * @param {string} text Button text
- * @param {function(HTMLElementEventMap)} callback Function to call on click
+ * @param {function(Event)} callback Function to call on click
  * @returns {HTMLButtonElement} Button
  */
 function createPresetButton(text, callback) {
@@ -59,9 +59,10 @@ function createPresetButton(text, callback) {
 
 /**
  * Adds a preset button to the div
+ *
  * @param {string} name Name of button
  * @param {HTMLDivElement} div Div to add to
- * @param {function(HTMLElementEventMap)} func Function to call on click
+ * @param {function(Event)} func Function to call on click
  */
 function addPreset(name, div, func) {
     div.appendChild(createPresetButton(name, func));
@@ -69,8 +70,9 @@ function addPreset(name, div, func) {
 
 /**
  * Creates a link button
- * @param {string} text
- * @param {string} link
+ *
+ * @param {string} text Button text
+ * @param {string} link Button link
  * @returns {HTMLButtonElement} Button
  */
 function createLinkButton(text, link) {
@@ -86,9 +88,10 @@ function createLinkButton(text, link) {
 
 /**
  * Generates the proper forum thread link
- * @param {*} threadId Thread ID
- * @param {*} postId Post ID
- * @returns Formatted link
+ *
+ * @param {string | number} threadId Thread ID
+ * @param {string | number} postId Post ID
+ * @returns {string} Formatted link
  */
 function generateForumsURL(threadId, postId) {
     return `https://edgegamers.com/threads/${threadId}/` + ((postId) ? `#post-${postId}` : "");
@@ -191,18 +194,20 @@ function handleProfile() {
 
 /**
  * Adds hyperlinks to each admin within a string
- * @param {string} str
+ *
+ * @param {string} str String with admin names separated by commas
  * @returns {string} The string with hyperlinks
  */
 function assignAdminsOnlineHyperlink(str) {
+    const admins = [];
     for (const admin of str.split(", ")) {
         const id = knownAdmins[admin];
         if (id === undefined)
             continue;
-        str = str.replace(admin, `<a href="https://maul.edgegamers.com/index.php?page=home&id=${id}">${admin}</a>`);
+        admins.push(`<a href="https://maul.edgegamers.com/index.php?page=home&id=${id}">${admin}</a>`);
     }
 
-    return str;
+    return ", ".join(admins);
 }
 
 /**
@@ -225,6 +230,9 @@ function convertBanningAdmins() {
     }
 }
 
+/**
+ * Converts any links in ban notes to hyperlinks
+ */
 function updateBanNoteURLs() {
     const banNotes = document.querySelectorAll("span[id*=notes].col-xs-10");
     for (const banNote of banNotes) {
@@ -248,12 +256,11 @@ function updateBanNoteURLs() {
         // Add an event listener to the edit button to restore the original text. The edit notes button takes the text from the span, and we need to avoid having the linkified text in the edit box.
         const editNotes = banNote.parentElement.querySelector("span.edit_note_button");
         // We're using mousedown instead of click because the click event fires too late, and the textarea is already populated with the linkified text. The textarea is populated during click/mouseup, so mousedown fires before that.
-        // eslint-disable-next-line no-inner-declarations
-        function handleEditNotesClick(event) {
+        const handleEditNotesClick = function (event) {
             banNote.innerHTML = hiddenDiv.innerHTML;
             event.target.removeEventListener("mousedown", handleEditNotesClick);
             hiddenDiv.remove();
-        }
+        };
         editNotes.addEventListener("mousedown", handleEditNotesClick);
     }
 }

@@ -4,11 +4,17 @@
         "commonjs": true,
         "es2021": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:jsdoc/recommended"
+    ],
     "overrides": [],
     "parserOptions": {
         "ecmaVersion": "latest"
     },
+    "plugins": [
+        "jsdoc"
+    ],
     "rules": {
         "semi-style": [
             "error",
@@ -50,7 +56,8 @@
             "warn",
             {
                 "ignore": [
-                    -1, 1
+                    -1,
+                    1
                 ]
             }
         ],

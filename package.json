@@ -1,24 +1,25 @@
 {
-  "name": "egomonkey",
-  "version": "1.0.0",
-  "description": "[TamperMonkey](https://www.tampermonkey.net/) plugins designed to improve the EdgeGamers Forums and MAUL website.",
-  "main": "EGO Ad Resize.user.js",
-  "devDependencies": {
-    "eslint": "^8.31.0",
-    "eslint-config-google": "^0.14.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MSWS/eGOMonkey.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MSWS/eGOMonkey/issues"
-  },
-  "homepage": "https://github.com/MSWS/eGOMonkey#readme"
+    "name": "egomonkey",
+    "version": "1.0.1",
+    "description": "[TamperMonkey](https://www.tampermonkey.net/) plugins designed to improve the EdgeGamers Forums and MAUL website.",
+    "main": "EGO Ad Resize.user.js",
+    "devDependencies": {
+        "eslint": "^8.31.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-plugin-jsdoc": "^39.6.4"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MSWS/eGOMonkey.git"
+    },
+    "author": "MSWS",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/MSWS/eGOMonkey/issues"
+    },
+    "homepage": "https://github.com/MSWS/eGOMonkey#readme"
 }

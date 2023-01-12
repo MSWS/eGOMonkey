@@ -1,8 +1,7 @@
 // ==UserScript==
 // @name         EGO Forum Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
-// @updateURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20Forum%20Enhancement.user.js
-// @downloadURL  https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20Forum%20Enhancement.user.js
+// @updateURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/Enhance_Forums.js
 // @version      STABLE-1.0.1
 // @description  Add various enhancements & QOL additions to the EdgeGamers Forums that are beneficial for Leadership members.
 // @author       blank_dvth, Skle, MSWS
@@ -17,13 +16,15 @@
 
 "use strict";
 
-const MAUL_BUTTON_TEXT = "MAUL";
-const MAUL_INSERT_AFTER = 3;
-const MAUL_NAV_MAUL_INDEX = 11;
-const BREADCRUMBS_INDEX = 2;
-
+const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
+const MAUL_INSERT_AFTER = 3; // Index for MAUL dropdown menu in NAV
+const MAUL_NAV_MAUL_INDEX = 11; // Nav index to start inserting into
+const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
+const CONTEST_COMPLETED = 1236; // Forum ID for contest completed
+const REPORT_COMPLETED = 1235; // Forum ID for report completed
 /**
  * Creates a button and adds it to the given div
+ *
  * @param {string} href URL that button should link to
  * @param {string} text Buttons' text
  * @param {HTMLDivElement} div Div to add/append to
@@ -47,6 +48,7 @@ function createButton(href, text, div, target = "_blank", append = false) {
 
 /**
  * Adds a MAUL profile button to the given div
+ *
  * @param {HTMLDivElement} div Div to add to
  * @param {number} memberId Member's ID
  */
@@ -54,6 +56,7 @@ function addMAULProfileButton(div, memberId) { createButton("https://maul.edgega
 
 /**
  * Adds a "List Bans" button to the div
+ *
  * @param {HTMLDivElement} div Div to add to
  * @param {number} steam64 Steam ID to check
  * TODO: Add support for other game IDs
@@ -62,6 +65,7 @@ function addBansButton(div, steam64) { createButton("https://maul.edgegamers.com
 
 /**
  * Adds a "Lookup ID" button to the div
+ *
  * @param {HTMLDivElement} div Div to add to
  * @param {number} postTitle Steam ID to lookup
  */
@@ -73,6 +77,7 @@ function addLookupButton(div, postTitle) {
 
 /**
  * Adds a Move button to the div {@see handleThreadMovePage}
+ *
  * @param {HTMLDivElement} div Div to add to
  * @param {string} url URL to move to
  * @param {string} text Text for the button
@@ -86,10 +91,10 @@ function addMoveButton(div, url, text = "Move to Completed", id = "to_completed"
 
 /**
  * Adds a NAV item to the website's nav bar
+ *
  * @param {string} href URL to link to
  * @param {string} text Text for button
  * @param {HTMLElement} nav Nav to add to
- * @returns void
  */
 function addNav(href, text, nav) {
     const li = document.createElement("li");
@@ -107,8 +112,8 @@ function addNav(href, text, nav) {
 
 /**
  * Adds dropdown options for MAUL specifically
+ *
  * @param {HTMLElement} navList Site's navbar
- * @returns void
  */
 function addMAULNav(navList) {
     // MAUL DIV
@@ -145,6 +150,7 @@ function addMAULNav(navList) {
 
 /**
  * Generates large, transparent text (basically a watermark)
+ *
  * @param {string} top CSS Top Style
  * @param {string} str Text to display
  */
@@ -165,8 +171,8 @@ function generateRedText(top, str = "Confidential") {
 
 /**
  * Listens to and appends MAUL button when user hovers over a profile
- * @param {HTMLElementEventMap} event
- * @returns void
+ *
+ * @param {Event} event Event that was called
  */
 function tooltipMAULListener(event) {
     // Make sure this specific event is the node we want
@@ -190,7 +196,6 @@ function tooltipMAULListener(event) {
 
 /**
  * Moves and auto-fills out the moving prompt for a thread.
- * @returns void
  */
 function handleThreadMovePage() {
     const url = window.location.href;
@@ -199,8 +204,6 @@ function handleThreadMovePage() {
     let breadcrumbs = document.querySelector(".p-breadcrumbs").textContent.trim().split("\n\n\n\n\n\n");
     breadcrumbs = breadcrumbs[breadcrumbs.length - BREADCRUMBS_INDEX];
     if (breadcrumbs.match(/^(Contest a Ban)|(Report a Player)$/)) { // Ban Contest or Report (Non-Completed)
-        const CONTEST_COMPLETED = 1236;
-        const REPORT_COMPLETED = 1235;
         const form = document.forms[1];
         const drop = form.querySelector("select.js-nodeList");
         const checkArr = Array.from(form.querySelectorAll(".inputChoices-choice"));
@@ -218,8 +221,9 @@ function handleThreadMovePage() {
 
 /**
  * Checks if a given breadcrumbs string contains LE threads
- * @param {string} str
- * @returns true if LE, false otherwise
+ *
+ * @param {string} str Breadcrumb string to check
+ * @returns {boolean} true if LE, false otherwise
  */
 function isLeadership(str) {
     return str.match(/(Leadership|Report a Player|Report Completed)/);

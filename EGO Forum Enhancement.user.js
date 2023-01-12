@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         EdgeGamers Forum Enhancement
-// @namespace    https://github.com/MSWS/eGOMonkey/blob/master/EGO%20Forum%20Enhancement.user.js
-// @version      3.1.0
+// @name         EGO Forum Enhancement
+// @namespace    https://github.com/MSWS/eGOScripts/blob/master/EGO%20Forum%20Enhancement.user.js
+// @version      3.1.2
 // @description  Add various enhancements & QOL additions to the EdgeGamers Forums that are beneficial for Leadership members.
 // @author       blank_dvth, Skle, MSWS
 // @match        https://www.edgegamers.com/*
@@ -21,7 +21,7 @@ const MAUL_BUTTON_TEXT = "MAUL";
  * @returns {HTMLButtonElement} Button
  */
 function createPresetButton(text, callback) {
-    var button = document.createElement("span");
+    let button = document.createElement("span");
     button.classList.add("button");
     button.innerHTML = text;
     button.onclick = callback;
@@ -49,12 +49,12 @@ function addPreset(name, div, func) {
  * @param {boolean} append True to append, false to insert
  */
 function createButton(href, text, div, target = "_blank", append = false) {
-    var button = document.createElement("a");
+    let button = document.createElement("a");
     button.href = href;
     button.target = target;
     button.classList.add('button--link', 'button');
 
-    var button_text = document.createElement("span"); // Create button text
+    let button_text = document.createElement("span"); // Create button text
     button_text.classList.add('button-text');
     button_text.innerHTML = text;
 
@@ -84,7 +84,7 @@ function addBansButton(div, steam_id_64) { createButton("https://maul.edgegamers
  * @param {number} post_title Steam ID to lookup
  */
 function addLookupButton(div, post_title) {
-    var steam_id_unknown = post_title.match(/^.* - .* - (?<game_id>[\w\d\/\[\]\-\.:]*)$/);
+    let steam_id_unknown = post_title.match(/^.* - .* - (?<game_id>[\w\d\/\[\]\-\.:]*)$/);
     if (steam_id_unknown)
         createButton("https://steamid.io/lookup/" + steam_id_unknown.groups.game_id, "Lookup ID", div);
 }
@@ -97,7 +97,7 @@ function addLookupButton(div, post_title) {
  * @param {string} id Movement ID, this is a parameter in the URL that is used to determine where to move in the movement handling page
  */
 function addMoveButton(div, url, text = "Move to Completed", id = "to_completed") {
-    var post_id = url.match(/threads\/(?<post_id>\d+)/)
+    let post_id = url.match(/threads\/(?<post_id>\d+)/)
     if (post_id)
         createButton("https://www.edgegamers.com/threads/" + post_id.groups.post_id + "/move?move_" + id, text, div, "_self");
 }
@@ -110,9 +110,9 @@ function addMoveButton(div, url, text = "Move to Completed", id = "to_completed"
  * @returns void
  */
 function addNav(href, text, nav) {
-    var li = document.createElement("li");
-    var div = document.createElement("div");
-    var a = document.createElement("a");
+    let li = document.createElement("li");
+    let div = document.createElement("div");
+    let a = document.createElement("a");
     a.href = href;
     a.innerHTML = text;
     a.target = "_blank";
@@ -130,9 +130,9 @@ function addNav(href, text, nav) {
  */
 function addMAULNav(nav_list) {
     // MAUL DIV
-    var maul_div = nav_list.childNodes[11].childNodes[1]
+    let maul_div = nav_list.childNodes[11].childNodes[1]
     maul_div.setAttribute('data-has-children', 'true');
-    var dropdown = document.createElement("a");
+    let dropdown = document.createElement("a");
 
     dropdown.setAttribute('data-xf-key', '3');
     dropdown.setAttribute('data-xf-click', 'menu');
@@ -146,12 +146,12 @@ function addMAULNav(nav_list) {
 
     maul_div.append(dropdown);
 
-    var maul_dropdown = document.createElement("div");
+    let maul_dropdown = document.createElement("div");
     maul_dropdown.setAttribute('class', 'menu menu--structural');
     maul_dropdown.setAttribute('data-menu', 'menu');
     maul_dropdown.setAttribute('aria-hidden', 'true');
 
-    var dropdownhtml = '<div class="menu-content"> \
+    let dropdownhtml = '<div class="menu-content"> \
     <a href="https://maul.edgegamers.com/index.php?page=bans" target="_blank" class="menu-linkRow u-indentDepth0 js-offCanvasCopy " data-nav-id="maulBans">Bans</a> \
     <a href="https://maul.edgegamers.com/index.php?page=users" target="_blank" class="menu-linkRow u-indentDepth0 js-offCanvasCopy " data-nav-id="newProfilePosts">Users</a> \
     <hr class="menu-separator"> \
@@ -167,7 +167,7 @@ function addMAULNav(nav_list) {
  * @param {string} str Text to display
  */
 function generateRedText(top, str = "Confidential") {
-    var text = document.createElement("div");
+    let text = document.createElement("div");
     document.body.appendChild(text);
 
     text.innerHTML = str;
@@ -192,16 +192,16 @@ function tooltipMAULListener(event) {
         return;
 
     // The buttongroup containing the "Follow" button
-    var buttenGroupOne = event.target.querySelector('.memberTooltip > .memberTooltip-actions > :nth-child(1)');
+    let buttenGroupOne = event.target.querySelector('.memberTooltip > .memberTooltip-actions > :nth-child(1)');
     buttenGroupOne.querySelector('a').href.match(/^https:\/\/www\.edgegamers\.com\/members\/(\d+)\/follow$/);
-    var matches = buttenGroupOne.querySelector('a').href.match(/^https:\/\/www\.edgegamers\.com\/members\/(\d+)\/follow$/);
+    let matches = buttenGroupOne.querySelector('a').href.match(/^https:\/\/www\.edgegamers\.com\/members\/(\d+)\/follow$/);
     // Make sure matches were found, exit gracefully if not.
     if (!matches)
         return;
 
-    var id = matches[1];
+    let id = matches[1];
     // The buttongroup containing the "Start conversation" button
-    var buttonGroupTwo = event.target.querySelector('.memberTooltip > .memberTooltip-actions > :nth-child(2)');
+    let buttonGroupTwo = event.target.querySelector('.memberTooltip > .memberTooltip-actions > :nth-child(2)');
     // If the user is banned, buttonGroupTwo will be null. Default to buttonGroupOne.
     createButton("https://maul.edgegamers.com/index.php?page=home&id=" + id, MAUL_BUTTON_TEXT, buttonGroupTwo ?? buttenGroupOne, "_blank", true);
 }
@@ -213,15 +213,15 @@ function tooltipMAULListener(event) {
 function handleThreadMovePage() {
     if (!url.endsWith("?move_to_completed"))
         return;
-    var breadcrumbs = document.querySelector(".p-breadcrumbs").textContent.trim().split("\n\n\n\n\n\n");
+    let breadcrumbs = document.querySelector(".p-breadcrumbs").textContent.trim().split("\n\n\n\n\n\n");
     breadcrumbs = breadcrumbs[breadcrumbs.length - 2];
     if (breadcrumbs.match(/^(Contest a Ban)|(Report a Player)$/)) { // Ban Contest or Report (Non-Completed)
         const CONTEST_COMPLETED = 1236;
         const REPORT_COMPLETED = 1235;
-        var form = document.forms[1];
-        var drop = form.querySelector("select.js-nodeList");
-        var checkArr = Array.from(form.querySelectorAll(".inputChoices-choice"));
-        var optArr = Array.from(drop.options);
+        let form = document.forms[1];
+        let drop = form.querySelector("select.js-nodeList");
+        let checkArr = Array.from(form.querySelectorAll(".inputChoices-choice"));
+        let optArr = Array.from(drop.options);
         drop.selectedIndex = optArr.indexOf(optArr.find(el => el.value == (breadcrumbs.startsWith("Contest") ? CONTEST_COMPLETED : REPORT_COMPLETED)));
         if (drop.selectedIndex == -1) {
             throw "Could not find Completed forum";
@@ -247,29 +247,34 @@ function isLeadership(str) {
  * Adds misc. threads to main thread list
  */
 function handleForumsList() {
-    var private_category = document.querySelector(".block--category1240 > .block-container > .block-body");
+    let private_category = document.querySelector(".block--category1240 > .block-container > .block-body");
 
-    var subforum = document.createElement("div");
+    let subforum = document.createElement("div");
     subforum.classList.add("node", "node--forum", "node--id685");
 
-    var forumHtml = document.createElement('html');
-    fetch("https://www.edgegamers.com/forums/685/").then(function(response) {
-            response.text().then(function(text) {
-                forumHtml.innerHTML = text;
-                var thread = forumHtml.querySelector(".js-threadList > :first-child");
+    let forumHtml = document.createElement('html');
+    fetch("https://www.edgegamers.com/forums/685/").then(function (response) {
+        response.text().then(function (text) {
+            forumHtml.innerHTML = text;
+            let thread = forumHtml.querySelector(".js-threadList > :first-child");
 
-                // If the last thread in the bin is unread, mark the forum as unread
-                if(thread.classList.contains('is-unread')) {
-                    subforum.classList.add("node--unread");
-                }
-                var userHref = thread.querySelector('.structItem-cell--main > .structItem-minor > .structItem-parts > li > a');
-                var threadTitle = thread.querySelector('.structItem-cell--main > .structItem-title > a');
-                var date = thread.querySelector('.structItem-cell--latest > a > time');
-                var icon = thread.querySelector('.structItem-cell--icon > .structItem-iconContainer > a');
+            // If the last thread in the bin is unread, mark the forum as unread
+            if (thread.classList.contains('is-unread')) {
+                subforum.classList.add("node--unread");
+            }
+            let userHref = thread.querySelector('.structItem-cell--main > .structItem-minor > .structItem-parts > li > a');
+            let threadTitle = thread.querySelector('.structItem-cell--main > .structItem-title > a');
 
-                subforum.innerHTML = '<div class="node-body"> <span class="node-icon" aria-hidden="true"> <i class="fa--xf far fa-comments" aria-hidden="true"></i> </span> <div class="node-main js-nodeMain"> <h3 class="node-title"> <a href="/forums/685/" data-xf-init="element-tooltip" data-shortcut="node-description" id="js-XFUniqueId87">Moderator Trash Bin</a> </h3> <div class="node-description node-description--tooltip js-nodeDescTooltip">Planes, Trains, and Plantains</div> <div class="node-meta"> <div class="node-statsMeta"> <dl class="pairs pairs--inline"> <dt>Threads</dt> <dd>18.2K</dd> </dl> <dl class="pairs pairs--inline"> <dt>Messages</dt> <dd>69.6K</dd> </dl> </div> </div> <div class="node-subNodesFlat"> <span class="node-subNodesLabel">Sub-forums:</span> </div> </div> <div class="node-stats"> <dl class="pairs pairs--rows"> <dt>Threads</dt> <dd>18.1K</dd> </dl> <dl class="pairs pairs--rows"> <dt>Messages</dt> <dd>98.4K</dd> </dl> </div> <div class="node-extra"> <div class="node-extra-icon">' + icon.outerHTML + '</div> <div class="node-extra-row">' + threadTitle.outerHTML + '</div> <div class="node-extra-row"> <ul class="listInline listInline--bullet"> <li> ' + date.outerHTML + '</li> <li class="node-extra-user">' + userHref.outerHTML + '</li> </ul> </div> </div> </div>';
-                private_category.appendChild(subforum);
-            });
+            let titleHtml = threadTitle.outerHTML;
+            if (threadTitle.classList.contains('labelLink')) {
+                titleHtml += ' ' + thread.querySelector('.structItem-cell--main > .structItem-title > :nth-child(2)').outerHTML;
+            }
+            let date = thread.querySelector('.structItem-cell--latest > a > time');
+            let icon = thread.querySelector('.structItem-cell--icon > .structItem-iconContainer > a');
+
+            subforum.innerHTML = '<div class="node-body"> <span class="node-icon" aria-hidden="true"> <i class="fa--xf far fa-comments" aria-hidden="true"></i> </span> <div class="node-main js-nodeMain"> <h3 class="node-title"> <a href="/forums/685/" data-xf-init="element-tooltip" data-shortcut="node-description" id="js-XFUniqueId87">Moderator Trash Bin</a> </h3> <div class="node-description node-description--tooltip js-nodeDescTooltip">Planes, Trains, and Plantains</div> <div class="node-meta"> <div class="node-statsMeta"> <dl class="pairs pairs--inline"> <dt>Threads</dt> <dd>18.2K</dd> </dl> <dl class="pairs pairs--inline"> <dt>Messages</dt> <dd>69.6K</dd> </dl> </div> </div> <div class="node-subNodesFlat"> <span class="node-subNodesLabel">Sub-forums:</span> </div> </div> <div class="node-stats"> <dl class="pairs pairs--rows"> <dt>Threads</dt> <dd>18.1K</dd> </dl> <dl class="pairs pairs--rows"> <dt>Messages</dt> <dd>98.4K</dd> </dl> </div> <div class="node-extra"> <div class="node-extra-icon">' + icon.outerHTML + '</div> <div class="node-extra-row">' + titleHtml + '</div> <div class="node-extra-row"> <ul class="listInline listInline--bullet"> <li> ' + date.outerHTML + '</li> <li class="node-extra-user">' + userHref.outerHTML + '</li> </ul> </div> </div> </div>';
+            private_category.appendChild(subforum);
+        });
     });
 }
 
@@ -277,7 +282,7 @@ function handleForumsList() {
  * Handles generic/nonspecific threads
  */
 function handleGenericThread() {
-    var breadcrumbs = document.querySelector(".p-breadcrumbs").innerText;
+    let breadcrumbs = document.querySelector(".p-breadcrumbs").innerText;
     if (breadcrumbs.match(/((Contest (a Ban|Completed))|(Report (a Player|Completed))) ?$/)) { // Ban Contest or Report
         handleBanReport();
     }
@@ -290,16 +295,16 @@ function handleGenericThread() {
  * TODO: Add support for other game IDs
  */
 function handleBanReport() {
-    var breadcrumbs = document.querySelector(".p-breadcrumbs").innerText;
-    var post_title = document.querySelector(".p-title").innerText;
-    var button_group = document.querySelector("div.buttonGroup");
+    let breadcrumbs = document.querySelector(".p-breadcrumbs").innerText;
+    let post_title = document.querySelector(".p-title").innerText;
+    let button_group = document.querySelector("div.buttonGroup");
     addMAULProfileButton(button_group, document.querySelector(".message-name > a.username").href.substring(35));
 
-    var steam_id = post_title.match(/^.* - .* - ([^\d]*?(?<game_id>(\d+)|(STEAM_\d:\d:\d+)|(\[U:\d:\d+\])).*)$/)
+    let steam_id = post_title.match(/^.* - .* - ([^\d]*?(?<game_id>(\d+)|(STEAM_\d:\d:\d+)|(\[U:\d:\d+\])).*)$/)
     if (steam_id) {
-        var unparsed_id = steam_id.groups.game_id;
+        let unparsed_id = steam_id.groups.game_id;
         try {
-            var steam_id_64 = (SteamIDConverter.isSteamID64(unparsed_id) ? unparsed_id : SteamIDConverter.toSteamID64(unparsed_id));
+            let steam_id_64 = (SteamIDConverter.isSteamID64(unparsed_id) ? unparsed_id : SteamIDConverter.toSteamID64(unparsed_id));
             addBansButton(button_group, steam_id_64);
         } catch (TypeError) {
             addBansButton(button_group, post_title.split(" - ")[2]);
@@ -398,13 +403,13 @@ function handleApplicationPage() {
 
 (function () {
     // Determine what page we're on
-    var url = window.location.href;
+    let url = window.location.href;
 
     document.body.addEventListener('DOMNodeInserted', tooltipMAULListener, false);
     document.body.addEventListener('DOMNodeInserted', handleOnHold, false);
 
     // Add Helpful Links to the Navigation Bar
-    var nav_list = document.querySelector(".p-nav-list");
+    let nav_list = document.querySelector(".p-nav-list");
     addMAULNav(nav_list);
 
     addNav("https://gitlab.edgegamers.io/", "GitLab", nav_list);

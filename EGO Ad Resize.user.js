@@ -13,19 +13,19 @@
 
 (function () {
     // Remove banners
-    var banners = [...document.querySelectorAll("div[style$=\"height:90px;\"]")];
+    let banners = [...document.querySelectorAll("div[style$=\"height:90px;\"]")];
     banners.forEach(banner => {
         banner.remove();
     });
 
     // Remove sidebar
-    var mainBody = document.querySelector("div .p-body-main--withSidebar");
+    let mainBody = document.querySelector("div .p-body-main--withSidebar");
     if (mainBody)
         mainBody.classList.replace("p-body-main--withSidebar", "p-body-main");
-    var sideBar = document.querySelector(".p-body-sidebar");
+    let sideBar = document.querySelector(".p-body-sidebar");
     if (sideBar)
         sideBar.remove();
-    var sideBarCol = document.querySelector(".p-body-sidebarCol");
+    let sideBarCol = document.querySelector(".p-body-sidebarCol");
     if (sideBarCol)
         sideBarCol.remove();
 })();

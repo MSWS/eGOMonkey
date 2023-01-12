@@ -30,9 +30,9 @@ function addPreset(name, div, func) {
  * @returns {HTMLDivElement} Div to add presets to
  */
 function createPresetDiv() {
-    var div = document.createElement("div");
-    var subtitle = document.createElement("h4");
-    var child_container = document.getElementById("child_container")
+    let div = document.createElement("div");
+    let subtitle = document.createElement("h4");
+    let child_container = document.getElementById("child_container")
     div.id = "preset_div";
     div.style.display = "flex";
     div.style.flexDirection = "row";
@@ -52,7 +52,7 @@ function createPresetDiv() {
  * @returns {HTMLButtonElement} Button
  */
 function createPresetButton(text, callback) {
-    var button = document.createElement("button");
+    let button = document.createElement("button");
     button.classList.add("btn", "btn-default");
     button.innerHTML = text;
     button.onclick = callback;
@@ -67,7 +67,7 @@ function createPresetButton(text, callback) {
  * @returns {HTMLButtonElement} Button
  */
 function createLinkButton(text, link) {
-    var a = document.createElement("a");
+    let a = document.createElement("a");
     a.classList.add("btn", "btn-default");
     a.href = link;
     a.target = "_blank";
@@ -103,7 +103,7 @@ function loadAdmins() {
  * Adds presets for ban reason/duration/notes
  */
 function handleAddBan() {
-    var div = createPresetDiv();
+    let div = createPresetDiv();
 
     // Insert presets
     addPreset("Get IP (via Ban)", div, function () {
@@ -114,7 +114,7 @@ function handleAddBan() {
     });
     addPreset("Ban Evasion", div, function () {
         document.getElementById("reason").value = "Ban Evasion";
-        var length = document.getElementById("length");
+        let length = document.getElementById("length");
         length.value = 0;
         length.disabled = true;
     });
@@ -125,12 +125,12 @@ function handleAddBan() {
  * Adds presets for ban evasion, and misc. utility buttons
  */
 function handleEditBan() {
-    var div = createPresetDiv();
+    let div = createPresetDiv();
 
     // Insert presets
     addPreset("Ban Evasion", div, function () {
         document.getElementById("reason").value = "Ban Evasion";
-        var length = document.getElementById("length");
+        let length = document.getElementById("length");
         if (length.value != 0) {
             length.value = 0;
             length.disabled = true;
@@ -138,9 +138,9 @@ function handleEditBan() {
     });
 
     // Steam ID buttons
-    var id_group = document.querySelector(".control-label[for=gameId]").parentElement;
-    var id = id_group.querySelector("p").innerText;
-    var id_div = document.createElement("div");
+    let id_group = document.querySelector(".control-label[for=gameId]").parentElement;
+    let id = id_group.querySelector("p").innerText;
+    let id_div = document.createElement("div");
     id_div.style.display = "flex";
     id_div.style.fledDirection = "row";
     id_div.style.paddingTop = "10px";
@@ -151,9 +151,9 @@ function handleEditBan() {
     id_div.appendChild(createLinkButton("SteamID (UK)", "https://steamid.uk/profile/" + id, "_blank"));
 
     // IP buttons
-    var ip_group = Array.from(document.querySelectorAll(".control-label")).find(el => el.textContent === "IP").parentElement; // BECAUSE MAUL HAS THE IP LABELED WITH THE WRONG FOR
-    var ip = ip_group.querySelector("p").innerText;
-    var ip_div = document.createElement("div");
+    let ip_group = Array.from(document.querySelectorAll(".control-label")).find(el => el.textContent === "IP").parentElement; // BECAUSE MAUL HAS THE IP LABELED WITH THE WRONG FOR
+    let ip = ip_group.querySelector("p").innerText;
+    let ip_div = document.createElement("div");
     ip_div.style.display = "flex";
     ip_div.style.fledDirection = "row";
     ip_div.style.paddingTop = "10px";
@@ -166,7 +166,7 @@ function handleEditBan() {
  * Automatically converts old links to updated ones
  */
 function handleProfile() {
-    var userNotes = [...document.querySelectorAll("div.col-xs-6 > div > div:nth-child(3)")];
+    let userNotes = [...document.querySelectorAll("div.col-xs-6 > div > div:nth-child(3)")];
     userNotes.forEach(userNote => {
         userNote.textContent = userNote.textContent.replaceAll(
             /(?:https?:\/\/)?(?:www\.)?edge-gamers\.com\/forums\/showthread\.php\?p=(\d+)(?:#?post(\d+))?/g,
@@ -225,10 +225,10 @@ function convertBanningAdmins() {
 }
 
 function updateBanNoteURLs() {
-    var banNotes = document.querySelectorAll("span[id*=notes].col-xs-10");
+    let banNotes = document.querySelectorAll("span[id*=notes].col-xs-10");
     banNotes.forEach(banNote => {
         // Replace the text with a linkified version
-        var replaced = banNote.innerHTML.replaceAll(
+        let replaced = banNote.innerHTML.replaceAll(
             /https?:\/\/(www\.)?[-a-zA-Z0-9.]{1,256}\.[a-zA-Z0-9]{2,6}\b(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/g,
             '<a href="$&" target="_blank">$&</a>'
         );
@@ -236,7 +236,7 @@ function updateBanNoteURLs() {
         if (replaced === banNote.innerHTML)
             return;
         // Create a hidden div to store the original text
-        var hiddenDiv = document.createElement("span");
+        let hiddenDiv = document.createElement("span");
         hiddenDiv.style.display = "none";
         hiddenDiv.innerHTML = banNote.innerHTML;
         hiddenDiv.id = banNote.id + "_original";
@@ -258,7 +258,7 @@ function updateBanNoteURLs() {
 
 (function () {
     // Determine what page we're on
-    var url = window.location.href;
+    let url = window.location.href;
 
     if (url.match(/^https:\/\/maul\.edgegamers\.com\/index\.php\?page=editban\/?$/))  // Add Ban Page (not Edit, that will have &id=12345 in the URL)
         handleAddBan();

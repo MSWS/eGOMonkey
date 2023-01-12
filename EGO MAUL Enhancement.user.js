@@ -226,7 +226,7 @@ function convertBanningAdmins() {
 
 function updateBanNoteURLs() {
     let banNotes = document.querySelectorAll("span[id*=notes].col-xs-10");
-    banNotes.forEach(banNote => {
+    for(let banNote of banNotes) {
         // Replace the text with a linkified version
         let replaced = banNote.innerHTML.replaceAll(
             /https?:\/\/(www\.)?[-a-zA-Z0-9.]{1,256}\.[a-zA-Z0-9]{2,6}\b(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/g,
@@ -234,7 +234,7 @@ function updateBanNoteURLs() {
         );
         // If the text hasn't been changed, move on
         if (replaced === banNote.innerHTML)
-            return;
+            continue;
         // Create a hidden div to store the original text
         let hiddenDiv = document.createElement("span");
         hiddenDiv.style.display = "none";
@@ -253,7 +253,7 @@ function updateBanNoteURLs() {
             hiddenDiv.remove();
         }
         editNotes.addEventListener("mousedown", handleEditNotesClick);
-    });
+    }
 }
 
 (function () {

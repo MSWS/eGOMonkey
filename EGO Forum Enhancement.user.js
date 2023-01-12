@@ -2,7 +2,8 @@
 // @name         EGO Forum Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
 // @updateURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20Forum%20Enhancement.user.js
-// @version      3.1.3
+// @downloadURL  https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20Forum%20Enhancement.user.js
+// @version      STABLE-1.0.0
 // @description  Add various enhancements & QOL additions to the EdgeGamers Forums that are beneficial for Leadership members.
 // @author       blank_dvth, Skle, MSWS
 // @match        https://www.edgegamers.com/*

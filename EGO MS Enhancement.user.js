@@ -2,7 +2,8 @@
 // @name         EGO MS Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
 // @updateURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20MS%20Enhancement.user.js
-// @version      1.0.3
+// @downloadURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/EGO%20MS%20Enhancement.user.js
+// @version      STABLE-1.0.0
 // @description  Add various enhancements & QOL additions to the EdgeGamers Forums that are beneficial for MS members.
 // @author       Skle, MSWS
 // @match        https://www.edgegamers.com/application/*

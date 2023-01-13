@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EGO Ad Resize
 // @namespace    https://github.com/MSWS/eGOMonkey
-// @downloadURL  https://github.com/MSWS/eGOMonkey/releases/latest/download/Enhance_Ads.user.js
+// @downloadURL  %DOWNLOAD%
 // @version      %VERSION%
 // @description  Removes whitespace left over from ads on the EdgeGamers website. This is to be used in combination with an adblocker (such as U-Block Origin).
 // @author       blank_dvth, Skle, MSWS

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EGO MAUL Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
-// @downloadURL  https://github.com/MSWS/eGOMonkey/releases/latest/download/Enhance_MAUL.user.js
+// @downloadURL  %DOWNLOAD%
 // @version      %VERSION%
 // @description  Add various enhancements & QOL additions to the EdgeGamers MAUL page that are beneficial for CS Leadership members.
 // @author       blank_dvth, Left, Skle, MSWS

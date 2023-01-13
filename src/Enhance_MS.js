@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EGO MS Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
-// @downloadURL  https://github.com/MSWS/eGOMonkey/releases/latest/download/Enhance_MS.user.js
+// @downloadURL  %DOWNLOAD%
 // @version      %VERSION%
 // @description  Add various enhancements & QOL additions to the EdgeGamers Forums that are beneficial for MS members.
 // @author       Skle, MSWS
@@ -13,6 +13,8 @@
 "use strict";
 
 const POPUP_CHILDREN = 2; // How many children are in the "On Hold" popup
+
+const REASONS = { "No MAUL": ("MAUL account must be created and verified", "DESCRIPTION") };
 
 /**
  * Adds a preset button to the div
@@ -82,7 +84,7 @@ function handleOnHold(event) {
         return;
 
     const body = event.target.querySelector(".overlay > .overlay-content > form > .block-container > .block-body");
-    const reason = body.querySelector(":nth-child(1) > dd > input");
+    const reasonElement = body.querySelector(":nth-child(1) > dd > input");
     let explain = body.querySelector(":nth-child(2) > dd > input");
     // Convert the explain input into a textarea
     explain.outerHTML = explain.outerHTML.replace("input", "textarea");
@@ -92,22 +94,31 @@ function handleOnHold(event) {
     explain.setAttribute("maxlength", "1024");
     const div = body.querySelector(":nth-child(4) > dd > div > .formSubmitRow-controls");
 
+    for (const [title, value] of Object.entries(REASONS)) {
+        const reason = value[0];
+        const desc = value[1];
+        addPreset(createPresetButton(title, function () {
+            reasonElement.value = reason;
+            explain.value = desc;
+        }), div);
+    }
+
     addPreset(createPresetButton("No MAUL", function () {
-        reason.value = "MAUL account must be created and verified";
+        reasonElement.value = "MAUL account must be created and verified";
         explain.value =
             "In order for you to fix this you'll need to click the MAUL link at the top of the page in the navbar, click \"Edit Game IDs,\""
             + " then click the Sign in through Steam button under the Source ID section. Once you've done so, please reply to this post!";
     }), div);
 
     addPreset(createPresetButton("Steam ID", function () {
-        reason.value = "Steam account must be verified in MAUL";
+        reasonElement.value = "Steam account must be verified in MAUL";
         explain.value =
             "In order for you to fix this you'll need to click the MAUL link at the top of the page in the navbar, click \"Edit Game IDs,\""
             + " then click the Sign in through Steam button under the Source ID section. Once you've done so, please reply to this post!";
     }), div);
 
     addPreset(createPresetButton("Minecraft ID", function () {
-        reason.value = "Minecraft ID must be verified in MAUL";
+        reasonElement.value = "Minecraft ID must be verified in MAUL";
         explain.value =
             "In order for you to fix this you'll need to click the MAUL link at the top of the page in the navbar, click \"Edit Game IDs,\""
             + " then under ID for Minecraft, input your Minecraft username, click Convert to Game ID, then log onto our Minecraft server."
@@ -115,7 +126,7 @@ function handleOnHold(event) {
     }), div);
 
     addPreset(createPresetButton("Battlefield ID", function () {
-        reason.value = "Battlefield account must be verified in MAUL";
+        reasonElement.value = "Battlefield account must be verified in MAUL";
         explain.value =
             "In order for you to fix this you'll need to click the MAUL link at the top of the page in the navbar,"
             + " in MAUL hover over the home link in the top left,"
@@ -123,14 +134,14 @@ function handleOnHold(event) {
     }), div);
 
     addPreset(createPresetButton("Discord ID", function () {
-        reason.value = "Discord ID must be verfied in MAUL";
+        reasonElement.value = "Discord ID must be verfied in MAUL";
         explain.value =
             "In order for you to fix this you'll need to click the MAUL link at the top of the page in the navbar, click \"Edit Game IDs,\""
             + "then click the sign in through Discord button under the discord ID section. Once you have done so, please reply to this post!";
     }), div);
 
     addPreset(createPresetButton("Name", function () {
-        reason.value = "Inappropriate Name";
+        reasonElement.value = "Inappropriate Name";
         explain.value =
             "As for your name, Please click [URL='https://www.edgegamers.com/account/username']here[/URL] and fill out a name change request."
             + " After you fill it out, please wait while your name change request is finalized and the change is completed."

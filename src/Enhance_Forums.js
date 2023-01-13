@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EGO Forum Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
-// @downloadURL  https://github.com/MSWS/eGOMonkey/releases/latest/download/Enhance_Forums.user.js
+// @downloadURL  %DOWNLOAD%
 // @version      %VERSION%
 // @description  Add various enhancements & QOL additions to the EdgeGamers Forums that are beneficial for Leadership members.
 // @author       blank_dvth, Skle, MSWS

@@ -4,25 +4,29 @@ on:
     branches:
       - '*.*.*'
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
     steps:
     - uses: actions/checkout@v3
-    - name: Append .user.js to filename
-      run: |
-        for file in src/*.js; do
-          mv "$file" "${file%.js}.user.js"
-        done
-    - name: Replace version
-      run: |
-        sed -i "s/%VERSION%/${{ env.VERSION }}/g" *
     - name: Install modules
       run: npm install
     - name: Run ESLint-Prod
       run: npm run lint -- --max-warnings=0
+    - name: Append .user.js to filename
+      run: |
+        for file in src/*.js; do
+          mv "$file" .
+        done
+        for file in *.js; do
+          mv "$file" "${file%.js}.user.js"
+          sed -i "s/%DOWNLOAD%/https:\/\/github.com\/MSWS\/eGOMonkey\/releases\/latest\/download\/${file%.js}.user.js/g" "${file%.js}.user.js"
+        done
+    - name: Replace version globally
+      run: |
+        sed -i "s/%VERSION%/${{ env.VERSION }}/g" *.js
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
@@ -32,4 +36,4 @@ jobs:
         allowUpdates: true
 
 env:
-  VERSION: ${{ github.ref_name }}.${{ github.run_number }}
+  VERSION: ${{ github.ref_name }}-${{ github.run_id }}

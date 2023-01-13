@@ -40,7 +40,7 @@
         ],
         "curly": [
             "warn",
-            "multi"
+            "multi-or-nest"
         ],
         "default-case-last": "warn",
         "dot-notation": "error",

@@ -1,8 +1,8 @@
 name: CI
 on:
   push:
-    tags:
-    - '*'
+    release:
+      types: [published]
     branches:
     - master
     - main
@@ -34,6 +34,7 @@ jobs:
         artifacts: "*.js"
         tag: ${{ env.VERSION }}
         makeLatest: true
+        allowUpdates: true
 
 env:
   VERSION: ${{ github.ref_name }}.${{ github.run_number }}

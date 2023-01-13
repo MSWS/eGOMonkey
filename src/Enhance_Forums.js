@@ -22,6 +22,7 @@ const MAUL_NAV_MAUL_INDEX = 11; // Nav index to start inserting into
 const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
 const CONTEST_COMPLETED = 1236; // Forum ID for contest completed
 const REPORT_COMPLETED = 1235; // Forum ID for report completed
+
 /**
  * Creates a button and adds it to the given div
  *
@@ -277,7 +278,6 @@ function handleForumsList() {
 
 /**
  * Adds "View Bans" or "Lookup ID" button on report/contest threads.
- * TODO: Add support for other game IDs
  */
 function handleBanReport() {
     const breadcrumbs = document.querySelector(".p-breadcrumbs").innerText;

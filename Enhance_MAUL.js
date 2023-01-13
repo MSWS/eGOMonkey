@@ -105,7 +105,7 @@ function loadAdmins() {
     const admins = GM_getResourceText("admins");
     admins.split("\n").forEach(line => {
         const separator = line.lastIndexOf("|");
-        const username = line.substring(separator);
+        const username = line.substring(0, separator);
         const id = line.substring(separator + 1);
         knownAdmins[username] = id;
     });
@@ -203,8 +203,10 @@ function assignAdminsOnlineHyperlink(str) {
     const admins = [];
     for (const admin of str.split(", ")) {
         const id = knownAdmins[admin];
-        if (id === undefined)
+        if (id === undefined) {
+            admins.push(admin);
             continue;
+        }
         admins.push(`<a href="https://maul.edgegamers.com/index.php?page=home&id=${id}">${admin}</a>`);
     }
 
@@ -215,7 +217,7 @@ function assignAdminsOnlineHyperlink(str) {
  * Adds hyperlinks to the Banning Admins fields
  */
 function convertBanningAdmins() {
-    if (Object.keys(knownAdmins).length)
+    if (!Object.keys(knownAdmins).length)
         loadAdmins();
     const headers = document.querySelectorAll(".expand > td > span.pull-left");
     let wasAdminOnline = false;

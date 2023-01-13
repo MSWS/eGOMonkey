@@ -208,7 +208,7 @@ function assignAdminsOnlineHyperlink(str) {
         admins.push(`<a href="https://maul.edgegamers.com/index.php?page=home&id=${id}">${admin}</a>`);
     }
 
-    return ", ".join(admins);
+    return admins.join(", ");
 }
 
 /**

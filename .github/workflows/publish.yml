@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+    tags:
+    - '*'
+    branches:
+    - master
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Append .user.js to filename
+      run: |
+        for file in *.js; do
+          mv "$file" "${file%.js}.user.js"
+        done
+    - name: Replace version
+      run: |
+        sed -i "s/%VERSION%/${{ env.VERSION }}/g" *
+    - name: Install modules
+      run: npm install
+    - name: Run ESLint-Prod
+      run: npm run lint -- --max-warnings=0
+    - name: Create Release
+      if: github.ref_name == 'master'
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "*.js"
+        tag: ${{ env.VERSION }}
+        makeLatest: true
+
+env:
+  VERSION: ${{ github.ref_name }}.${{ github.run_number }}

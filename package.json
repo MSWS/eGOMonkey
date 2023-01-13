@@ -1,6 +1,6 @@
 {
     "name": "egomonkey",
-    "version": "1.0.1",
+    "version": "%VERSION%",
     "description": "[TamperMonkey](https://www.tampermonkey.net/) plugins designed to improve the EdgeGamers Forums and MAUL website.",
     "main": "EGO Ad Resize.user.js",
     "devDependencies": {

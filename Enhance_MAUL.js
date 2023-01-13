@@ -2,7 +2,7 @@
 // @name         EGO MAUL Enhancement
 // @namespace    https://github.com/MSWS/eGOMonkey
 // @updateURL    https://raw.githubusercontent.com/MSWS/eGOMonkey/master/Enhance_MAUL.js
-// @version      STABLE-1.0.1
+// @version      %VERSION%
 // @description  Add various enhancements & QOL additions to the EdgeGamers MAUL page that are beneficial for CS Leadership members.
 // @author       blank_dvth, Left, Skle, MSWS
 // @match        https://maul.edgegamers.com/*
@@ -37,6 +37,7 @@ function createPresetDiv() {
     subtitle.style.paddingLeft = "15px";
     child.insertBefore(div, document.querySelector("form"));
     child.insertBefore(subtitle, div);
+
     return div;
 }
 

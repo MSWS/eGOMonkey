@@ -1,8 +1,8 @@
 name: CI
 on:
   push:
-    release:
-      types: [published]
+    tags:
+      - '*'
 
 jobs:
   build:

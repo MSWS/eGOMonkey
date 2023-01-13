@@ -4,7 +4,7 @@
 Use at your own risk.
 
 ## Description
-- [**EGO Ad Resize**](EGO%20Ad%20Resize.user.js): Removes additional whitespace leftover from adblock removing ads on the forums.
-- [**EGO Forum Enhancement**](EGO%20Forum%20Enhancement.user.js): Improved navigation.
-- [**EGO MAUL Enhancement**](EGO%20MAUL%20Enhancement.user.js): Field shortcuts.
-- [**EGO MS Enhancement**](EGO%20MS%20Enhancement.user.js): Added buttons for rejection / management reasons.
+- [**EGO Ad Resize**](Enhance_Ads.js): Removes additional whitespace leftover from adblock removing ads on the forums.
+- [**EGO Forum Enhancement**](Enhance_Forums.js): Improved navigation.
+- [**EGO MAUL Enhancement**](Enhance_MAUL.js): Field shortcuts.
+- [**EGO MS Enhancement**](Enhance_MS.js): Added buttons for rejection / management reasons.

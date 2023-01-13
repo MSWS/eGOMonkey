@@ -3,9 +3,6 @@ on:
   push:
     release:
       types: [published]
-    branches:
-    - master
-    - main
 
 jobs:
   build:
@@ -28,7 +25,6 @@ jobs:
     - name: Run ESLint-Prod
       run: npm run lint -- --max-warnings=0
     - name: Create Release
-      if: github.ref_name == 'master'
       uses: ncipollo/release-action@v1
       with:
         artifacts: "*.js"

@@ -175,7 +175,7 @@ function generateRedText(top, str = "Confidential") {
  *
  * @param {Event} event Event that was called
  */
-function tooltipMAULListener(event) {
+function permissionsPopupListener(event) {
     // Make sure this specific event is the node we want
     if (event.target.nodeName !== "DIV" || !event.target.classList.contains("tooltip-content-inner"))
         return;
@@ -330,7 +330,7 @@ function handleGenericThread() {
     // Determine what page we're on
     const url = window.location.href;
 
-    document.body.addEventListener("DOMNodeInserted", tooltipMAULListener, false);
+    document.body.addEventListener("DOMNodeInserted", permissionsPopupListener, false);
 
     // Add Helpful Links to the Navigation Bar
     const navList = document.querySelector(".p-nav-list");

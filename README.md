@@ -8,3 +8,4 @@ Use at your own risk.
 - [**EGO Forum Enhancement**](Enhance_Forums.js): Improved navigation.
 - [**EGO MAUL Enhancement**](Enhance_MAUL.js): Field shortcuts.
 - [**EGO MS Enhancement**](Enhance_MS.js): Added buttons for rejection / management reasons.
+- [**EGO WISP Enhancement**](Enhance_WISP.js): Added preset permission groups.

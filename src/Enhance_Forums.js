@@ -20,8 +20,24 @@ const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
 const MAUL_INSERT_AFTER = 3; // Index for MAUL dropdown menu in NAV
 const MAUL_NAV_MAUL_INDEX = 11; // Nav index to start inserting into
 const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
-const CONTEST_COMPLETED = 1236; // Forum ID for contest completed
-const REPORT_COMPLETED = 1235; // Forum ID for report completed
+
+const FORUMS = {
+    BF_LEADERSHIP: 1260,
+    CONTACT_LEADERSHIP: "contact-leadership",
+    CONTEST_COMPLETED: 1236,
+    CS_LEADERSHIP: 1261,
+    DODS_LEADERSHIP: 1262,
+    GTA_LEADERSHIP: 1316,
+    LEADERSHIP_COMPLETED: 853,
+    LEADERSHIP_DISCUSSION: 695,
+    MC_LEADERSHIP: 1264,
+    MODERATOR_TRASH: 685,
+    OW_LEADERSHIP: 1376,
+    PLAYER_REPORT_COMPLETED: 1235,
+    PLAYER_REPORT: 1233,
+    RUST_LEADERSHIP: 1366,
+    TF2_LEADERSHIP: 1265
+};
 
 /**
  * Creates a button and adds it to the given div
@@ -209,7 +225,7 @@ function handleThreadMovePage() {
         const drop = form.querySelector("select.js-nodeList");
         const checkArr = Array.from(form.querySelectorAll(".inputChoices-choice"));
         const optArr = Array.from(drop.options);
-        drop.selectedIndex = optArr.indexOf(optArr.find(el => el.value === (breadcrumbs.startsWith("Contest") ? CONTEST_COMPLETED : REPORT_COMPLETED)));
+        drop.selectedIndex = optArr.indexOf(optArr.find(el => el.value === (breadcrumbs.startsWith("Contest") ? FORUMS.CONTEST_COMPLETED : FORUMS.PLAYER_REPORT_COMPLETED)));
         if (drop.selectedIndex === -1)
             throw "Could not find Completed forum";
         try { // These buttons may not exist if you created the post yourself, this is just to prevent edge cases.
@@ -283,7 +299,8 @@ function handleBanReport() {
     const breadcrumbs = document.querySelector(".p-breadcrumbs").innerText;
     const postTitle = document.querySelector(".p-title").innerText;
     const buttonGroup = document.querySelector("div.buttonGroup");
-    const url = document.querySelector(".message-name > a.username").href;
+    const url = document.querySelector(".message-name > a.username")?.href;
+    if (!url) return; // Listing page, not a specific report/contest
     addMAULProfileButton(buttonGroup, url.substring(url.indexOf("members/") + "members/".length));
 
     const steamId = postTitle.match(/^.* - .* - ([^\d]*?(?<game_id>(\d+)|(STEAM_\d:\d:\d+)|(\[U:\d:\d+\])).*)$/);
@@ -322,7 +339,16 @@ function handleGenericThread() {
     if (breadcrumbs.match(/((Contest (a Ban|Completed))|(Report (a Player|Completed))) ?$/)) // Ban Contest or Report
         handleBanReport();
 
-    if (isLeadership(breadcrumbs)) // LE Forums
+    let le = isLeadership(breadcrumbs);
+
+    if (!le) {
+        let threadString = window.location.pathname.substring("/forums/".length);
+        if (threadString.endsWith("/"))
+            threadString = threadString.substring(0, threadString.length - 1);
+        le = Object.values(FORUMS).some((forum) => forum !== FORUMS.CONTEST_COMPLETED && threadString === forum.toString());
+    }
+
+    if (le) // LE Forums
         handleLeadership();
 }
 

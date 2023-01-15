@@ -12,7 +12,6 @@
 
 const BUTTON_COOLDOWN = 1000; // 1 second
 
-// eslint-disable-next-line no-unused-vars
 enum Perm {
     SUPPORT_OP_SUPER = 0,
     SUPPORT_OP,
@@ -116,6 +115,57 @@ function createWISPButton(text: string, callback: (e: MouseEvent) => void) {
     return button;
 }
 
+/**
+ * Generates a button assigning the proper permissions
+ *
+ * @param {string} perm Permission to assign
+ * @param {HTMLFormElement} form Form to assign to
+ * @returns {(e: MouseEvent) => void} Function to call on click
+ */
+function generateButtonEvent(perm: string, form: HTMLFormElement) {
+    return (e: MouseEvent) => {
+        if (!e.target)
+            return;
+        const inputs = form.querySelectorAll(".input[type='checkbox']") as NodeListOf<HTMLInputElement>;
+        e.preventDefault();
+
+        for (const index of PERMS.Super) {
+            if (!inputs[index].checked)
+                inputs[index].click();
+            inputs[index].click();
+        }
+
+        (e.target as HTMLInputElement).disabled = true;
+        setTimeout(() => { // WISP is terrible and I hate it so much
+            for (const index of PERMS[perm].values()) {
+                if (!inputs[index].checked)
+                    inputs[index].click();
+            }
+        }, 1);
+        setTimeout(() => {
+            (e.target as HTMLInputElement).disabled = false;
+        }, BUTTON_COOLDOWN);
+    };
+}
+
+/**
+ * Adds all permissions' preset buttons to the form
+ *
+ * @param {HTMLFormElement} form Form to add to
+ * @param {HTMLElement} email Email element
+ */
+function addPresetButtons(form: HTMLFormElement, email: HTMLElement) {
+    const presetsDiv = document.createElement("div");
+    const presetLabel = document.createElement("label");
+    presetLabel.textContent = "Presets";
+    presetLabel.classList.add("text-white", "opacity-50", "tracking-wide", "uppercase", "block", "mb-3");
+    presetsDiv.appendChild(presetLabel);
+
+    email.appendChild(presetsDiv);
+    for (const perm of Object.keys(PERMS))
+        presetsDiv.appendChild(createWISPButton(perm, generateButtonEvent(perm, form)));
+}
+
 const permissionsPopupListener = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
         const target = mutation.target as HTMLElement;
@@ -127,42 +177,11 @@ const permissionsPopupListener = new MutationObserver((mutations) => {
         if (!email || !form)
             continue;
 
-        const presetsDiv = document.createElement("div");
-        const presetLabel = document.createElement("label");
-        presetLabel.textContent = "Presets";
-        presetLabel.classList.add("text-white", "opacity-50", "tracking-wide", "uppercase", "block", "mb-3");
-        presetsDiv.appendChild(presetLabel);
-
-        email.appendChild(presetsDiv);
-        for (const perm of Object.keys(PERMS)) {
-            const onPress = (e: MouseEvent) => {
-                if (!e.target)
-                    return;
-                const inputs = form.querySelectorAll(".input[type='checkbox']") as NodeListOf<HTMLInputElement>;
-                e.preventDefault();
-
-                for (const index of PERMS.Super) {
-                    if (!inputs[index].checked)
-                        inputs[index].click();
-                    inputs[index].click();
-                }
-
-                (e.target as HTMLInputElement).disabled = true;
-                setTimeout(() => { // WISP is terrible and I hate it so much
-                    for (const index of PERMS[perm].values()) {
-                        if (!inputs[index].checked)
-                            inputs[index].click();
-                    }
-                }, 1);
-                setTimeout(() => {
-                    (e.target as HTMLInputElement).disabled = false;
-                }, BUTTON_COOLDOWN);
-            };
-            presetsDiv.appendChild(createWISPButton(perm, onPress));
-        }
+        addPresetButtons(form, email);
         break;
     }
 });
+
 
 (function () {
     permissionsPopupListener.observe(document.body, { childList: true, subtree: true });

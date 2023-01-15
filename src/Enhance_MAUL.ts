@@ -13,9 +13,6 @@
 // @grant        GM_getResourceText
 // ==/UserScript==
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-/* global SteamIDConverter, GM_getResourceText */
-
 // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any, camelcase
 declare var SteamIDConverter, GM_getResourceText: any;
 
@@ -107,8 +104,8 @@ function generateForumsURL(threadId: string | number, postId: string | number) {
  * Loads known admins from the admins resource into the knownAdmins dictionary
  */
 function loadAdmins() {
-    const admins = GM_getResourceText("admins");
-    admins.split("\n").forEach((line: string) => {
+    const admins: string = GM_getResourceText("admins");
+    admins.split("\n").forEach(line => {
         const separator = line.lastIndexOf("|");
         const username = line.substring(0, separator);
         const id = line.substring(separator + 1);
@@ -122,7 +119,6 @@ function loadAdmins() {
 function handleAddBan() {
     const div = createMAULDiv();
 
-    // Insert presets
     addMAULPreset("Get IP (via Ban)", div, function () {
         (document.getElementById("handle") as HTMLFormElement).value = "Suspected Ban Evader";
         (document.getElementById("length") as HTMLFormElement).value = 1;
@@ -135,7 +131,6 @@ function handleAddBan() {
         length.value = 0;
         length.disabled = true;
     });
-    // You can add more presets following the format shown above
 }
 
 /**
@@ -162,21 +157,21 @@ function handleEditBan() {
     idDiv.style.flexDirection = "row";
     idDiv.style.paddingTop = "10px";
     idGroup?.appendChild(idDiv);
-    idDiv.appendChild(createLinkButton("Steam", "https://steamcommunity.com/profiles/" + id));
-    idDiv.appendChild(createLinkButton("GameME", "https://edgegamers.gameme.com/search?si=uniqueid&rc=all&q=" + SteamIDConverter.toSteamID(id)));
-    idDiv.appendChild(createLinkButton("SteamID (IO)", "https://steamid.io/lookup/" + id));
-    idDiv.appendChild(createLinkButton("SteamID (UK)", "https://steamid.uk/profile/" + id));
+    idDiv.appendChild(createLinkButton("Steam", `https://steamcommunity.com/profiles/${id}`));
+    idDiv.appendChild(createLinkButton("GameME", `"https://edgegamers.gameme.com/search?si=uniqueid&rc=all&q=${SteamIDConverter.toSteamID(id)}`));
+    idDiv.appendChild(createLinkButton("SteamID (IO)", `https://steamid.io/lookup/${id}`));
+    idDiv.appendChild(createLinkButton("SteamID (UK)", `https://steamid.uk/profile/${id}`));
 
     // IP buttons
-    const ipGroup = Array.from(document.querySelectorAll(".control-label")).find(el => el.textContent === "IP")?.parentElement; // BECAUSE MAUL HAS THE IP LABELED WITH THE WRONG FOR
+    const ipGroup = Array.from(document.querySelectorAll(".control-label")).find(el => el.textContent === "IP")?.parentElement;
     const ip = ipGroup?.querySelector("p")?.innerText;
     const ipDiv = document.createElement("div");
     ipDiv.style.display = "flex";
     ipDiv.style.flexDirection = "row";
     ipDiv.style.paddingTop = "10px";
     ipGroup?.appendChild(ipDiv);
-    ipDiv.appendChild(createLinkButton("Check Spur", "https://spur.us/context/" + ip));
-    ipDiv.appendChild(createLinkButton("Check IPInfo", "https://ipinfo.io/" + ip));
+    ipDiv.appendChild(createLinkButton("Check Spur", `https://spur.us/context/${ip}`));
+    ipDiv.appendChild(createLinkButton("Check IPInfo", `https://ipinfo.io/${ip}`));
 }
 
 /**

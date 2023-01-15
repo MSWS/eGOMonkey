@@ -12,9 +12,6 @@
 // @grant        none
 // ==/UserScript==
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-/* global SteamIDConverter */
-
 // eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
 declare var SteamIDConverter: any;
 
@@ -83,7 +80,7 @@ function addMAULProfileButton(div: HTMLDivElement, memberId: string | number) {
  * @param {number} steam64 Steam ID to check
  * TODO: Add support for other game IDs
  */
-function addBansButton(div: HTMLDivElement, steam64: string) { createForumsButton("https://maul.edgegamers.com/index.php?page=bans&qType=gameId&q=" + steam64, "List Bans", div); }
+function addBansButton(div: HTMLDivElement, steam64: string) { createForumsButton(`https://maul.edgegamers.com/index.php?page=bans&qType=gameId&q=${steam64}`, "List Bans", div); }
 
 /**
  * Adds a "Lookup ID" button to the div
@@ -93,8 +90,7 @@ function addBansButton(div: HTMLDivElement, steam64: string) { createForumsButto
  */
 function addLookupButton(div: HTMLDivElement, postTitle: string) {
     const steamUnknown = postTitle.match(/^.* - .* - (?<game_id>[\w\d/[\]\-.:]*)$/);
-    if (steamUnknown)
-        createForumsButton("https://steamid.io/lookup/" + steamUnknown.groups?.game_id, "Lookup ID", div);
+    createForumsButton(`https://steamid.io/lookup/${steamUnknown?.groups?.game_id}`, "Lookup ID", div);
 }
 
 /**
@@ -107,8 +103,7 @@ function addLookupButton(div: HTMLDivElement, postTitle: string) {
  */
 function addMoveButton(div: HTMLDivElement, url: string, text = "Move to Completed", id = "to_completed") {
     const postId = url.match(/threads\/(?<post_id>\d+)/);
-    if (postId)
-        createForumsButton("https://www.edgegamers.com/threads/" + postId.groups?.post_id + "/move?move_" + id, text, div, "_self");
+    createForumsButton(`https://www.edgegamers.com/threads/${postId?.groups?.post_id}/move?move_${id}`, text, div, "_self");
 }
 
 /**
@@ -119,9 +114,7 @@ function addMoveButton(div: HTMLDivElement, url: string, text = "Move to Complet
  * @param {HTMLElement} nav Nav to add to
  */
 function addForumNav(href: string, text: string, nav: HTMLElement) {
-    const li = document.createElement("li");
-    const div = document.createElement("div");
-    const a = document.createElement("a");
+    const li = document.createElement("li"), div = document.createElement("div"), a = document.createElement("a");
     a.href = href;
     a.innerHTML = text;
     a.target = "_blank";
@@ -235,9 +228,9 @@ function handleThreadMovePage() {
     if (!breadcrumbs)
         return;
     breadcrumbs = breadcrumbs[breadcrumbs.length - BREADCRUMBS_INDEX];
+    if (!breadcrumbs)
+        return;
     if (breadcrumbs.match(/^(Contest a Ban)|(Report a Player)$/)) { // Ban Contest or Report (Non-Completed)
-        if (!breadcrumbs)
-            return;
         const form = document.forms[1];
         const drop = form.querySelector("select.js-nodeList") as HTMLSelectElement;
         const checkArr = Array.from(form.querySelectorAll(".inputChoices-choice"));
@@ -265,10 +258,8 @@ function handleThreadMovePage() {
  */
 function isLeadership(str: string) {
     const matches = str.match(/(Leadership|Report a Player|Report Completed)/);
-    if (!matches)
-        return false;
 
-    return matches.length > 0;
+    return matches && matches.length > 0;
 }
 
 /**
@@ -282,7 +273,7 @@ function handleForumsList() {
     subforum.classList.add("node", "node--forum", "node--id685");
 
     const forumHtml = document.createElement("html");
-    fetch("https://www.edgegamers.com/forums/685/").then(function (response) {
+    fetch(`https://www.edgegamers.com/forums/${FORUMS.MODERATOR_TRASH}/`).then(function (response) {
         response.text().then(function (text) {
             forumHtml.innerHTML = text;
             const thread = forumHtml.querySelector(".js-threadList > :first-child");
@@ -292,7 +283,6 @@ function handleForumsList() {
             if (thread.classList.contains("is-unread"))
                 subforum.classList.add("node--unread");
 
-            // let userHref = thread.querySelector('.structItem-cell--main > .structItem-minor > .structItem-parts > li > a');
             const userHref = thread.querySelector(".structItem-cell--latest > .structItem-minor > a");
             const threadTitle = thread.querySelector(".structItem-cell--main > .structItem-title > a");
             if (!threadTitle)

@@ -13,18 +13,14 @@
 (function () {
     // Remove banners
     const banners = [...document.querySelectorAll("div[style$=\"height:90px;\"]")];
-    banners.forEach(banner => {
+    for (const banner of banners)
         banner.remove();
-    });
 
     // Remove sidebar
     const mainBody = document.querySelector("div .p-body-main--withSidebar");
-    if (mainBody)
-        mainBody.classList.replace("p-body-main--withSidebar", "p-body-main");
+    mainBody?.classList.replace("p-body-main--withSidebar", "p-body-main");
     const sideBar = document.querySelector(".p-body-sidebar");
-    if (sideBar)
-        sideBar.remove();
+    sideBar?.remove();
     const sideBarCol = document.querySelector(".p-body-sidebarCol");
-    if (sideBarCol)
-        sideBarCol.remove();
+    sideBarCol?.remove();
 })();

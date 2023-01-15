@@ -10,8 +10,6 @@
 // @grant        none
 // ==/UserScript==
 
-"use strict";
-
 (function () {
     // Remove banners
     const banners = [...document.querySelectorAll("div[style$=\"height:90px;\"]")];

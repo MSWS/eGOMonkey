@@ -15,9 +15,16 @@ jobs:
       run: npm install
     - name: Run ESLint-Prod
       run: npm run lint -- --max-warnings=0
+    - name: Compile TypeScript
+      run: npm run compile
+    - name: Minify JavaScript
+      run: |
+        for file in out/*.js; do
+          npx uglifyjs "$file" -o "${file%.js}.js" --compress --mangle --mangle-props --comments "/\s(==\/?UserScript==|@.+$)/"
+        done
     - name: Append .user.js to filename
       run: |
-        for file in src/*.js; do
+        for file in out/*.js; do
           mv "$file" .
         done
         for file in *.js; do

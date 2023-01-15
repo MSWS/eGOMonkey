@@ -10,9 +10,7 @@
 // @grant        none
 // ==/UserScript==
 
-"use strict";
-
-const POPUP_CHILDREN = 2; // How many children are in the "On Hold" popup
+const POPUP_CHILDREN = 24; // How many children are in the "On Hold" popup
 
 const REASONS = {
     "No MAUL":
@@ -61,11 +59,11 @@ const REASONS = {
 /**
  * Adds a preset button to the div
  *
- * @param {HTMLButtonElement} button Button to add
+ * @param {HTMLButtonElement | HTMLSpanElement} button Button to add
  * @param {HTMLDivElement} div Div to add to
  * @param {boolean} before Whether to add the button before the last child
  */
-function addPreset(button, div, before = true) {
+function addMSPreset(button: HTMLButtonElement | HTMLSpanElement, div: HTMLDivElement, before = true) {
     if (before)
         div.insertBefore(button, div.childNodes[div.childNodes.length - 1]);
     else
@@ -76,10 +74,11 @@ function addPreset(button, div, before = true) {
  * Creates a preset button
  *
  * @param {string} text Button text
- * @param {function(Event)} callback Function to call on click
- * @returns {HTMLButtonElement} Button
+ * @param {(MouseEvent) => any} callback Function to call on click
+ * @returns {HTMLSpanElement} Button
  */
-function createPresetButton(text, callback) {
+// eslint-disable-next-line no-unused-vars
+function createMSCallbackButton(text: string, callback: (e: MouseEvent) => void): HTMLSpanElement {
     const button = document.createElement("span");
     button.classList.add("button");
     button.innerHTML = text;
@@ -95,9 +94,9 @@ function createPresetButton(text, callback) {
  *
  * @param {string} text Button's text
  * @param {string} url  URL to link to
- * @returns {HTMLButtonElement} Generated button
+ * @returns {HTMLSpanElement} Generated button
  */
-function createPresetURLButton(text, url) {
+function createMSButton(text: string, url: string): HTMLSpanElement {
     const button = document.createElement("a");
     button.classList.add("button");
     button.classList.add("button-fix");
@@ -114,37 +113,44 @@ function createPresetURLButton(text, url) {
  *
  * @param {Event} event Event
  */
-function handleOnHold(event) {
-    if (event.target.nodeName !== "DIV" || !event.target.classList.contains("overlay-container"))
-        return;
+const handleOnHold = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        const target = mutation.target as HTMLElement;
+        if (mutation.target.nodeName !== "BODY")
+            continue;
+        if (!target.classList.contains("is-modalOpen") || !target.classList.contains("is-modalOverlayOpen"))
+            continue;
+        // Event may fire twice - add a mark the first time it fires, and ignore the rest
+        if (target.childNodes.length > POPUP_CHILDREN)
+            continue;
+        const mark = document.createElement("input");
+        mark.type = "hidden";
+        target.append(mark);
+        const body = document.querySelector(".overlay > .overlay-content > form > .block-container > .block-body");
+        if (!body)
+            continue;
+        const reasonElement = body.querySelector(":nth-child(1) > dd > input") as HTMLTextAreaElement;
+        let explain = body.querySelector(":nth-child(2) > dd > input") as HTMLTextAreaElement;
+        if (!reasonElement || !explain)
+            continue;
+        // Convert the explain input into a textarea
+        explain.outerHTML = explain.outerHTML.replace("input", "textarea");
+        // Variable gets dereferenced - reference it again
+        explain = body.querySelector(":nth-child(2) > dd > textarea") as HTMLTextAreaElement;
+        explain.style.height = "200px";
+        explain.setAttribute("maxlength", "1024");
+        const div = body.querySelector(":nth-child(4) > dd > div > .formSubmitRow-controls") as HTMLDivElement;
 
-    // Event may fire twice - add a mark the first time it fires, and ignore the rest
-    const mark = document.createElement("input");
-    mark.type = "hidden";
-    event.target.append(mark);
-    if (event.target.childNodes.length > POPUP_CHILDREN)
-        return;
-
-    const body = event.target.querySelector(".overlay > .overlay-content > form > .block-container > .block-body");
-    const reasonElement = body.querySelector(":nth-child(1) > dd > input");
-    let explain = body.querySelector(":nth-child(2) > dd > input");
-    // Convert the explain input into a textarea
-    explain.outerHTML = explain.outerHTML.replace("input", "textarea");
-    // Variable gets dereferenced - reference it again
-    explain = body.querySelector(":nth-child(2) > dd > textarea");
-    explain.style.height = "200px";
-    explain.setAttribute("maxlength", "1024");
-    const div = body.querySelector(":nth-child(4) > dd > div > .formSubmitRow-controls");
-
-    for (const [title, value] of Object.entries(REASONS)) {
-        const reason = value[0];
-        const desc = value[1];
-        addPreset(createPresetButton(title, function () {
-            reasonElement.value = reason;
-            explain.value = desc;
-        }), div);
+        for (const [title, value] of Object.entries(REASONS)) {
+            const reason = value[0];
+            const desc = value[1];
+            addMSPreset(createMSCallbackButton(title, function () {
+                reasonElement.value = reason;
+                explain.value = desc;
+            }), div);
+        }
     }
-}
+});
 
 /**
  * Adds misc. MS buttons that are normally not shown
@@ -152,40 +158,39 @@ function handleOnHold(event) {
  * @param {HTMLDivElement} div Div to add to
  * @param {boolean} access True if we have access to the page
  */
-function addSuperButtons(div, access = true) {
+function addSuperButtons(div: HTMLDivElement, access = true) {
     const url = window.location.href;
     const id = url.substring(url.lastIndexOf("application/") + "application/".length).replace("/", "");
     let status;
     if (access)
-        status = document.querySelector(".badge").textContent.trim();
+        status = document.querySelector(".badge")?.textContent?.trim();
 
-    addPreset(createPresetURLButton("Deny", `/application/${id}/state?state_id=5`), div);
+    addMSPreset(createMSButton("Deny", `/application/${id}/state?state_id=5`), div);
     if (access) {
         div.append(document.createElement("br"));
         div.appendChild(document.createElement("br"));
     }
     if (!access || status !== "Pending")
-        addPreset(createPresetURLButton("Set to Pending", `/application/${id}/state?state_id=2`), div);
+        addMSPreset(createMSButton("Set to Pending", `/application/${id}/state?state_id=2`), div);
     if (!access || status !== "On Hold" && status !== "Pending")
-        addPreset(createPresetURLButton("On Hold", `/application/${id}/state?state_id=3`), div);
+        addMSPreset(createMSButton("On Hold", `/application/${id}/state?state_id=3`), div);
 
-    addPreset(createPresetURLButton("Accept", `/application/${id}/state?state_id=6`), div);
-    addPreset(createPresetURLButton("LE Approve", `/application/${id}/state?state_id=7`), div);
+    addMSPreset(createMSButton("Accept", `/application/${id}/state?state_id=6`), div);
+    addMSPreset(createMSButton("LE Approve", `/application/${id}/state?state_id=7`), div);
 }
 
 /**
  * Adds the super buttons to the page
  */
 function handleSuperButtons() {
-    const title = document.querySelector("h1").textContent;
-    let parent;
-    if (title === "Oops! We ran into some problems.") {
-        parent = document.querySelector(".p-body-main");
-        addSuperButtons(parent, false);
-    } else {
-        parent = document.querySelector("td>a.button-fix").parentNode;
-        addSuperButtons(parent);
-    }
+    const title = document.querySelector("h1")?.textContent;
+    const parent =
+        (title === "Oops! We ran into some problems."
+            ? document.querySelector(".p-body-main")
+            : document.querySelector("td>a.button-fix")?.parentNode) as HTMLDivElement;
+    if (!parent)
+        return;
+    addSuperButtons(parent, title !== "Oops! We ran into some problems.");
 }
 
 /**
@@ -193,16 +198,16 @@ function handleSuperButtons() {
  */
 function handleApplicationPage() {
     try {
-        for (const child of document.querySelector(".dataList-row > :nth-child(2)").childNodes) {
+        for (const child of (document.querySelector(".dataList-row > :nth-child(2)") as HTMLElement).childNodes) {
             if (child.nodeName !== "A")
                 continue;
-            child.setAttribute("target", "_blank");
+            (child as HTMLElement).setAttribute("target", "_blank");
         }
     } catch (error) { /* empty */ }
 }
 
 (function () {
-    document.body.addEventListener("DOMNodeInserted", handleOnHold, false);
+    handleOnHold.observe(document.body, { childList: true, subtree: true });
     handleApplicationPage();
     handleSuperButtons();
 })();

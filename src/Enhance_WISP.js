@@ -78,8 +78,8 @@ const Perm = {
 };
 
 const PERMS = {
-    "Developer": [Perm.CONTROL_SUPER, Perm.ALLOCATION_READ, Perm.STARTUP_READ, Perm.FILES_SUPER, Perm.BACKUP_READ, Perm.DETAILS_READ, Perm.AUDIT_SUPER, Perm.HEALTH_READ],
     "Basic": [Perm.CONTROL_CONSOLE, Perm.CONTROL_START, Perm.HEALTH_READ],
+    "Developer": [Perm.CONTROL_SUPER, Perm.ALLOCATION_READ, Perm.STARTUP_READ, Perm.FILES_SUPER, Perm.BACKUP_READ, Perm.DETAILS_READ, Perm.AUDIT_SUPER, Perm.HEALTH_READ],
     "Super":
         [
             Perm.SUPPORT_OP_SUPER,
@@ -94,7 +94,9 @@ const PERMS = {
             Perm.DETAILS_SUPER,
             Perm.AUDIT_SUPER,
             Perm.MODPACKS_SUPER,
-            Perm.PLUGINS_SUPER
+            Perm.PLUGINS_SUPER,
+            Perm.HEALTH_SUPER,
+            Perm.REINSTALL_SUPER
         ]
 };
 

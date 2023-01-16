@@ -134,6 +134,7 @@ function addForumNav(href: string, text: string, nav: HTMLElement) {
  * @param {HTMLDivElement} navList Nav item to add to
  * @param {string} link URL to link to
  * @param {string} title Title for the dropdown item
+ * @param {boolean} newSection True to add a new section, false to add to the current section
  */
 function addDropdownNav(navList: HTMLDivElement, link: string, title: string, newSection = false) {
     const maulDiv = navList as HTMLDivElement;

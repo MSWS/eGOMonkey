@@ -112,6 +112,7 @@ function addMoveButton(div: HTMLDivElement, url: string, text = "Move to Complet
  * @param {string} href URL to link to
  * @param {string} text Text for button
  * @param {HTMLElement} nav Nav to add to
+ * @returns {HTMLLIElement} Div that was added
  */
 function addForumNav(href: string, text: string, nav: HTMLElement) {
     const li = document.createElement("li"), div = document.createElement("div"), a = document.createElement("a");
@@ -123,45 +124,52 @@ function addForumNav(href: string, text: string, nav: HTMLElement) {
     div.appendChild(a);
     li.appendChild(div);
     nav.insertBefore(li, nav.childNodes[nav.childNodes.length - MAUL_INSERT_AFTER]);
+
+    return div;
 }
 
 /**
- * Adds dropdown options for MAUL specifically
+ * Adds dropdown items to the specified nav item
  *
- * @param {HTMLElement} navList Site's navbar
+ * @param {HTMLDivElement} navList Nav item to add to
+ * @param {string} link URL to link to
+ * @param {string} title Title for the dropdown item
  */
-function addMAULNav(navList: HTMLUListElement) {
-    // MAUL DIV
-    const maulDiv = navList.childNodes[MAUL_NAV_MAUL_INDEX].childNodes[1] as HTMLDivElement;
-    maulDiv.setAttribute("data-has-children", "true");
-    const dropdown = document.createElement("a");
+function addDropdownNav(navList: HTMLDivElement, link: string, title: string) {
+    const maulDiv = navList as HTMLDivElement;
+    if (!maulDiv.hasAttribute("data-has-children")) {
+        maulDiv.setAttribute("data-has-children", "true");
+        const dropdown = document.createElement("a");
 
-    dropdown.setAttribute("data-xf-key", "3");
-    dropdown.setAttribute("data-xf-click", "menu");
-    dropdown.setAttribute("data-menu-pos-ref", "< .p-navEl");
-    dropdown.setAttribute("class", "p-navEl-splitTrigger");
-    dropdown.setAttribute("role", "button");
-    dropdown.setAttribute("tabindex", "0");
-    dropdown.setAttribute("aria-label", "Toggle expanded");
-    dropdown.setAttribute("aria-expanded", "false");
-    dropdown.setAttribute("aria-haspopup", "true");
+        dropdown.setAttribute("data-xf-key", "3");
+        dropdown.setAttribute("data-xf-click", "menu");
+        dropdown.setAttribute("data-menu-pos-ref", "< .p-navEl");
+        dropdown.setAttribute("class", "p-navEl-splitTrigger");
+        dropdown.setAttribute("role", "button");
+        dropdown.setAttribute("tabindex", "0");
+        dropdown.setAttribute("aria-label", "Toggle expanded");
+        dropdown.setAttribute("aria-expanded", "false");
+        dropdown.setAttribute("aria-haspopup", "true");
 
-    maulDiv.append(dropdown);
+        maulDiv.append(dropdown);
 
-    const maulDropdown = document.createElement("div");
-    maulDropdown.setAttribute("class", "menu menu--structural");
-    maulDropdown.setAttribute("data-menu", "menu");
-    maulDropdown.setAttribute("aria-hidden", "true");
+        const maulDropdown = document.createElement("div");
+        maulDropdown.setAttribute("class", "menu menu--structural");
+        maulDropdown.setAttribute("data-menu", "menu");
+        maulDropdown.setAttribute("aria-hidden", "true");
+        maulDropdown.innerHTML = "<div class=\"menu-content\"></div>";
 
+        maulDiv.append(maulDropdown);
+    }
+
+    const maulDropdown = maulDiv.querySelector("div>.menu-content") as HTMLElement;
     const dropdownhtml =
-        "<div class=\"menu-content\"> <a href=\"https://maul.edgegamers.com/index.php?page=bans\" target=\"_blank\""
-        + " class=\"menu-linkRow u-indentDepth0 js-offCanvasCopy \" data-nav-id=\"maulBans\">Bans</a>"
-        + " <a href=\"https://maul.edgegamers.com/index.php?page=users\" target=\"_blank\" class=\"menu-linkRow"
-        + " u-indentDepth0 js-offCanvasCopy \" data-nav-id=\"newProfilePosts\">Users</a> <hr class=\"menu-separator\"> </div>";
+        `<a href="${link}" target="_blank"`
+        + ` class="menu-linkRow u-indentDepth0 js-offCanvasCopy ">${title}</a>`;
 
-    maulDropdown.innerHTML = dropdownhtml;
-    maulDiv.append(maulDropdown);
+    maulDropdown.appendChild(document.createRange().createContextualFragment(dropdownhtml));
 }
+
 
 /**
  * Generates large, transparent text (basically a watermark)
@@ -377,11 +385,15 @@ function handleGenericThread() {
     profileTooltipListener.observe(document.body, { childList: true, subtree: true });
 
     // Add Helpful Links to the Navigation Bar
-    const navList = document.querySelector(".p-nav-list") as HTMLUListElement;
-    addMAULNav(navList);
+    const navList = document.querySelector(".p-nav-list") as HTMLDivElement;
+    const maulDiv = navList.childNodes[MAUL_NAV_MAUL_INDEX].childNodes[1] as HTMLDivElement;
+    addDropdownNav(maulDiv, "https://maul.edgegamers.com/index.php?page=bans", "Bans");
+    addDropdownNav(maulDiv, "https://maul.edgegamers.com/index.php?page=users", "Users");
 
-    addForumNav("https://gitlab.edgegamers.io/", "GitLab", navList);
-    addForumNav("https://edgegamers.gameme.com/", "GameME", navList);
+    const linksList = addForumNav("https://gitlab.edgegamers.io/", "Links", navList);
+    addDropdownNav(linksList, "https://gitlab.edgegamers.io", "GitLab");
+    addDropdownNav(linksList, "https://edgegamers.gameme.com", "GameME");
+    addDropdownNav(linksList, "https://wisp.edgegamers.io", "WISP");
 
     if (url.match(/^https:\/\/www\.edgegamers\.com\/members\/\d+/))  // Members Page
         addMAULProfileButton(document.querySelector(".memberHeader-buttons") as HTMLDivElement, window.location.pathname.substring("/members/".length));

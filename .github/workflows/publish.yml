@@ -20,7 +20,7 @@ jobs:
     - name: Minify JavaScript
       run: |
         for file in out/*.js; do
-          npx uglifyjs "$file" -o "${file%.js}.js" --compress --mangle --mangle-props --comments "/\s(==\/?UserScript==|@.+$)/"
+          npx uglifyjs "$file" -o "${file%.js}.js" --compress --mangle toplevel --mangle-props --comments "/\s(==\/?UserScript==|@.+$)/"
         done
     - name: Append .user.js to filename
       run: |

@@ -44,4 +44,4 @@ jobs:
         generateReleaseNotes: true
 
 env:
-  VERSION: ${{ github.ref_name }}-${{ github.run_id }}
+  VERSION: ${{ github.ref_name }}.${{ github.run_id }}

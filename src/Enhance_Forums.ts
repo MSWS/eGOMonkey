@@ -392,5 +392,6 @@ function handleGenericThread() {
     if (url.match(/^https:\/\/www\.edgegamers\.com\/forums\/?$/))  // Forums List
         handleForumsList();
 
-    handleGenericThread();
+    if (!url.match(/^https:\/\/www\.edgegamers\.com\/-\/$/))
+        handleGenericThread();
 })();

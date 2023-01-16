@@ -18,6 +18,9 @@
         "jsdoc",
         "@typescript-eslint"
     ],
+    "ignorePatterns": [
+        "out/*"
+    ],
     "rules": {
         "semi-style": [
             "error",

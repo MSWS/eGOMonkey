@@ -9,16 +9,66 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=edgegamers.com
 // @require      https://peterolson.github.io/BigInteger.js/BigInteger.min.js
 // @require      https://raw.githubusercontent.com/12pt/steamid-converter/master/js/converter-min.js
-// @grant        none
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_xmlhttpRequest
+// @connect      maul.edgegamers.com
 // ==/UserScript==
 
-// eslint-disable-next-line no-var, @typescript-eslint/no-explicit-any
+/* eslint-disable no-var, @typescript-eslint/no-explicit-any, camelcase */
+
 declare var SteamIDConverter: any;
+declare var GM_getValue: (key: string, defaultValue: any) => any;
+declare var GM_setValue: (key: string, value: any) => void;
+
+interface GM_xmlhttpRequestResponse {
+    finalUrl: string;
+    readyState: number;
+    status: number;
+    statusText: string;
+    responseHeaders: { [key: string]: string };
+    response?: any;
+    responseXML?: Document;
+    responseText: string;
+}
+
+interface GM_xmlhttpRequestOptions {
+    method: "GET" | "HEAD" | "POST";
+    url: string;
+    headers?: { [key: string]: string };
+    data?: string;
+    cookie?: string;
+    binary?: boolean;
+    nocache?: boolean;
+    revalidate?: boolean;
+    timeout?: number;
+    context?: any;
+    responseType?: "arraybuffer" | "blob" | "json" | "stream";
+    overrideMimeType?: string;
+    anonymous?: boolean;
+    fetch?: boolean;
+    user?: string;
+    password?: string;
+    onabort?: (response: GM_xmlhttpRequestResponse) => void;
+    onerror?: (response: GM_xmlhttpRequestResponse) => void;
+    onloadstart?: (response: GM_xmlhttpRequestResponse) => void;
+    onprogress?: (response: GM_xmlhttpRequestResponse) => void;
+    onreadystatechange?: (response: GM_xmlhttpRequestResponse) => void;
+    ontimeout?: (response: GM_xmlhttpRequestResponse) => void;
+    onload?: (response: GM_xmlhttpRequestResponse) => void;
+}
+
+
+declare function GM_xmlhttpRequest(options: GM_xmlhttpRequestOptions): void;
+
+
+/* eslint-enable no-var, @typescript-eslint/no-explicit-any, camelcase */
 
 const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
 const MAUL_INSERT_AFTER = 3; // Index for MAUL dropdown menu in NAV
 const MAUL_NAV_MAUL_INDEX = 11; // Nav index to start inserting into
 const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
+const MAUL_AUTH_TIMEOUT = 3600000; // 1 hour
 
 const FORUMS = {
     BF_LEADERSHIP: 1260,
@@ -386,6 +436,26 @@ function handleGenericThread() {
         handleLeadership();
 }
 
+/**
+ * Automatically authenticates with MAUL in the background if
+ * it has been a while since the last authentication.
+ */
+function checkMAULAuth() {
+    const authDate = GM_getValue("maul_auth_date", 0);
+    if (Date.now() - authDate < MAUL_AUTH_TIMEOUT)
+        return;
+    const maulLink = $("a.p-navEl-link[data-nav-id=\"maul\"]") as JQuery<HTMLLinkElement>;
+    if (maulLink.length === 0) return;
+    const maulUrl = maulLink[0].href;
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: maulUrl,
+        onload: function () {
+            GM_setValue("maul_auth_date", Date.now());
+        }
+    });
+}
+
 (function () {
     // Determine what page we're on
     const url = window.location.href;
@@ -421,4 +491,6 @@ function handleGenericThread() {
 
     if (!url.match(/^https:\/\/www\.edgegamers\.com\/-\/$/))
         handleGenericThread();
+
+    checkMAULAuth();
 })();

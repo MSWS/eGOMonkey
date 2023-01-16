@@ -81,7 +81,7 @@ function addMSPreset(button: HTMLButtonElement | HTMLSpanElement, div: HTMLDivEl
 function createMSCallbackButton(text: string, callback: (e: MouseEvent) => void): HTMLSpanElement {
     const button = document.createElement("span");
     button.classList.add("button");
-    button.innerHTML = text;
+    button.textContent = text;
     button.onclick = callback;
     button.style.marginLeft = "4px";
     button.style.marginTop = "4px";

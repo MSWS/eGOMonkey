@@ -135,7 +135,7 @@ function addForumNav(href: string, text: string, nav: HTMLElement) {
  * @param {string} link URL to link to
  * @param {string} title Title for the dropdown item
  */
-function addDropdownNav(navList: HTMLDivElement, link: string, title: string) {
+function addDropdownNav(navList: HTMLDivElement, link: string, title: string, newSection = false) {
     const maulDiv = navList as HTMLDivElement;
     if (!maulDiv.hasAttribute("data-has-children")) {
         maulDiv.setAttribute("data-has-children", "true");
@@ -162,7 +162,14 @@ function addDropdownNav(navList: HTMLDivElement, link: string, title: string) {
         maulDiv.append(maulDropdown);
     }
 
-    const maulDropdown = maulDiv.querySelector("div>.menu-content") as HTMLElement;
+    if (newSection) {
+        const maulDropdown = maulDiv.querySelector("div") as HTMLElement;
+        const dropdownhtml = "<div class=\"menu-content\"></div>";
+
+        maulDropdown.appendChild(document.createRange().createContextualFragment(dropdownhtml));
+    }
+    const contents = maulDiv.querySelectorAll("div>.menu-content") as NodeListOf<HTMLElement>;
+    const maulDropdown = contents[contents.length - 1] as HTMLElement;
     const dropdownhtml =
         `<a href="${link}" target="_blank"`
         + ` class="menu-linkRow u-indentDepth0 js-offCanvasCopy ">${title}</a>`;
@@ -394,6 +401,13 @@ function handleGenericThread() {
     addDropdownNav(linksList, "https://gitlab.edgegamers.io", "GitLab");
     addDropdownNav(linksList, "https://edgegamers.gameme.com", "GameME");
     addDropdownNav(linksList, "https://wisp.edgegamers.io", "WISP");
+    addDropdownNav(linksList, "https://discord.gg/edgegamers", "Discords", true);
+    addDropdownNav(linksList, "https://discord.gg/qGyYm8kK5W", "Specialty Teams");
+    addDropdownNav(linksList, "https://discord.gg/NmW5bJXc2Y", "Tech");
+    addDropdownNav(linksList, "https://discord.gg/HTMdYPBEeC", "Battlefield");
+    addDropdownNav(linksList, "https://discord.gg/clearrp", "GTA");
+    addDropdownNav(linksList, "https://discord.gg/ZaYjZmF", "Overwatch");
+    addDropdownNav(linksList, "https://discord.gg/kRdMAP4AdY", "Rust");
 
     if (url.match(/^https:\/\/www\.edgegamers\.com\/members\/\d+/))  // Members Page
         addMAULProfileButton(document.querySelector(".memberHeader-buttons") as HTMLDivElement, window.location.pathname.substring("/members/".length));

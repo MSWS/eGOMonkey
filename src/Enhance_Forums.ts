@@ -68,7 +68,7 @@ const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
 const MAUL_INSERT_AFTER = 3; // Index for MAUL dropdown menu in NAV
 const MAUL_NAV_MAUL_INDEX = 11; // Nav index to start inserting into
 const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
-const MAUL_AUTH_TIMEOUT = 3600000; // 1 hour
+const MAUL_AUTH_TIMEOUT = 600000; // 10 minutes
 
 const FORUMS = {
     BF_LEADERSHIP: 1260,

@@ -71,22 +71,23 @@ const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
 const MAUL_AUTH_TIMEOUT = 600000; // 10 minutes
 
 const FORUMS = {
-    BF_LEADERSHIP: 1260,
-    CONTACT_LEADERSHIP: "contact-leadership",
-    CONTEST_COMPLETED: 1236,
-    CS_LEADERSHIP: 1261,
-    DODS_LEADERSHIP: 1262,
-    GTA_LEADERSHIP: 1316,
-    LEADERSHIP_COMPLETED: 853,
-    LEADERSHIP_DISCUSSION: 695,
-    MC_LEADERSHIP: 1264,
-    MODERATOR_TRASH: 685,
-    TECH_LEADERSHIP: 1128,
-    OW_LEADERSHIP: 1376,
-    PLAYER_REPORT_COMPLETED: 1235,
-    PLAYER_REPORT: 1233,
-    RUST_LEADERSHIP: 1366,
-    TF2_LEADERSHIP: 1265
+    BAN_APPEAL: 1234,
+    BAN_APPEAL_COMPLETED: 1236,
+    BAN_REPORT: 1233,
+    BAN_REPORT_COMPLETED: 1235,
+    LE_BF: 1260,
+    LE_CONTACT_COMPLETED: 853,
+    LE_CONTACT: "contact-leadership",
+    LE_CS: 1261,
+    LE_DISCUSSION: 695,
+    LE_DODS: 1262,
+    LE_GTA: 1316,
+    LE_MC: 1264,
+    LE_OW: 1376,
+    LE_RUST: 1366,
+    LE_TECH: 1128,
+    LE_TF2: 1265,
+    LE_TRASH: 685
 };
 
 /**
@@ -296,24 +297,36 @@ function handleThreadMovePage() {
     breadcrumbs = breadcrumbs[breadcrumbs.length - BREADCRUMBS_INDEX];
     if (!breadcrumbs)
         return;
-    if (breadcrumbs.match(/^(Contest a Ban)|(Report a Player)$/)) { // Ban Contest or Report (Non-Completed)
-        const form = document.forms[1];
-        const drop = form.querySelector("select.js-nodeList") as HTMLSelectElement;
-        const checkArr = Array.from(form.querySelectorAll(".inputChoices-choice"));
-        const optArr = Array.from(drop?.options);
-        const forumId = breadcrumbs.startsWith("Contest") ? FORUMS.CONTEST_COMPLETED : FORUMS.PLAYER_REPORT_COMPLETED;
-        const index = optArr.find(el => el.value === forumId.toString());
-        if (!index)
-            return;
-        drop.selectedIndex = optArr.indexOf(index);
-        if (drop.selectedIndex === -1)
-            throw "Could not find Completed forum";
-        try { // These buttons may not exist if you created the post yourself, this is just to prevent edge cases.
-            (checkArr.find(el => el.textContent === "Notify members watching the destination forum")?.querySelector("label > input") as HTMLInputElement).checked = false;
-            (checkArr.find(el => el.textContent?.startsWith("Notify thread starter of this action."))?.querySelector("label > input") as HTMLInputElement).checked = false;
-        } catch { /* empty */ }
-        form.submit();
-    }
+    // Ban Contest or Report (Non-Completed)
+    const form = document.forms[1];
+    const drop = form.querySelector("select.js-nodeList") as HTMLSelectElement;
+    const checkArr = Array.from(form.querySelectorAll(".inputChoices-choice"));
+    const optArr = Array.from(drop?.options);
+    const forumId = breadcrumbs.startsWith("Contest") ? FORUMS.BAN_APPEAL_COMPLETED : FORUMS.BAN_REPORT_COMPLETED;
+    const index = optArr.find(el => el.value === forumId.toString());
+    if (!index)
+        return;
+
+    drop.selectedIndex = optArr.indexOf(index);
+    if (drop.selectedIndex === -1)
+        throw "Could not find Completed forum";
+    try { // These buttons may not exist if you created the post yourself, this is just to prevent edge cases.
+        (checkArr.find(el => el.textContent === "Notify members watching the destination forum")?.querySelector("label > input") as HTMLInputElement).checked = false;
+        (checkArr.find(el => el.textContent?.startsWith("Notify thread starter of this action."))?.querySelector("label > input") as HTMLInputElement).checked = false;
+    } catch { /* empty */ }
+    form.submit();
+}
+
+/**
+ * Get the ID of the current forum
+ * @returns {number} Forum ID
+ */
+function getForumId() {
+    const id = document.getElementById("XF")?.dataset.containerKey?.replace("node-", "");
+    if (id)
+        return parseInt(id);
+
+    return -1;
 }
 
 /**
@@ -322,10 +335,13 @@ function handleThreadMovePage() {
  * @param {string} str Breadcrumb string to check
  * @returns {boolean} true if LE, false otherwise
  */
-function isLeadership(str: string) {
-    const matches = str.match(/(Leadership|Report a Player|Report Completed)/);
+function isLeadership() {
+    const id = getForumId();
+    // Check if id is within the FORUMS enum
+    if (Object.values(FORUMS).includes(id))
+        return true;
 
-    return matches && matches.length > 0;
+    return false;
 }
 
 /**
@@ -419,17 +435,17 @@ function handleLeadership() {
  * Handles generic/nonspecific threads
  */
 function handleGenericThread() {
-    const breadcrumbs = (document.querySelector(".p-breadcrumbs") as HTMLElement).innerText;
-    if (breadcrumbs.match(/((Contest (a Ban|Completed))|(Report (a Player|Completed))) ?$/)) // Ban Contest or Report
+    const id = getForumId();
+    if (id === FORUMS.BAN_APPEAL || id === FORUMS.BAN_APPEAL_COMPLETED || id === FORUMS.BAN_REPORT || id === FORUMS.BAN_REPORT_COMPLETED)
         handleBanReport();
 
-    let le = isLeadership(breadcrumbs);
+    let le = isLeadership();
 
     if (!le) {
         let threadString = window.location.pathname.substring("/forums/".length);
         if (threadString.endsWith("/"))
             threadString = threadString.substring(0, threadString.length - 1);
-        le = Object.values(FORUMS).some((forum) => forum !== FORUMS.CONTEST_COMPLETED && threadString === forum.toString());
+        le = Object.values(FORUMS).some((forum) => forum !== FORUMS.BAN_APPEAL_COMPLETED && threadString === forum.toString());
     }
 
     if (le) // LE Forums

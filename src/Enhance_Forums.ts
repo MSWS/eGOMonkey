@@ -355,7 +355,7 @@ function handleForumsList() {
     subforum.classList.add("node", "node--forum", "node--id685");
 
     const forumHtml = document.createElement("html");
-    fetch(`https://www.edgegamers.com/forums/${FORUMS.MODERATOR_TRASH}/`).then(function (response) {
+    fetch(`https://www.edgegamers.com/forums/${FORUMS.LE_TRASH}/`).then(function (response) {
         response.text().then(function (text) {
             forumHtml.innerHTML = text;
             const thread = forumHtml.querySelector(".js-threadList > :first-child");

@@ -319,6 +319,7 @@ function handleThreadMovePage() {
 
 /**
  * Get the ID of the current forum
+ *
  * @returns {number} Forum ID
  */
 function getForumId() {
@@ -330,9 +331,8 @@ function getForumId() {
 }
 
 /**
- * Checks if a given breadcrumbs string contains LE threads
+ * Checks if the current thread is in an LE forum
  *
- * @param {string} str Breadcrumb string to check
  * @returns {boolean} true if LE, false otherwise
  */
 function isLeadership() {

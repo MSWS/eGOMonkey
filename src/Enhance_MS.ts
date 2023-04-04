@@ -115,14 +115,11 @@ function createMSButton(text: string, url: string): HTMLSpanElement {
  */
 const handleOnHold = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
-        console.log("Mutation", mutation);
         const target = mutation.target as HTMLElement;
         if (mutation.target.nodeName !== "BODY")
             continue;
-        console.log("Target", target);
         if (!target.classList.contains("is-modalOpen") || !target.classList.contains("is-modalOverlayOpen"))
             continue;
-        console.log("IsModal", target);
         // Event may fire twice - add a mark the first time it fires, and ignore the rest
         if (target.childNodes.length > POPUP_CHILDREN)
             continue;

@@ -10,7 +10,7 @@
 // @grant        none
 // ==/UserScript==
 
-const POPUP_CHILDREN = 24; // How many children are in the "On Hold" popup
+const POPUP_CHILDREN = 28; // How many children are in the "On Hold" popup
 
 const REASONS = {
     "No MAUL":

@@ -123,7 +123,6 @@ const handleOnHold = new MutationObserver((mutations) => {
         // Event may fire twice - add a mark the first time it fires, and ignore the rest
         if (target.childNodes.length > POPUP_CHILDREN)
             continue;
-        console.log("IsPopup", target);
         const mark = document.createElement("input");
         mark.type = "hidden";
         target.append(mark);

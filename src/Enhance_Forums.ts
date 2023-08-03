@@ -64,7 +64,7 @@ declare function GM_xmlhttpRequest(options: GM_xmlhttpRequestOptions): void;
 
 /* eslint-enable no-var, @typescript-eslint/no-explicit-any, camelcase */
 
-const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
+// const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
 const MAUL_INSERT_AFTER = 3; // Index for MAUL dropdown menu in NAV
 const MAUL_NAV_MAUL_INDEX = 11; // Nav index to start inserting into
 const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
@@ -120,9 +120,9 @@ function createForumsButton(href: string, text: string, div: HTMLDivElement, tar
  * @param {HTMLDivElement} div Div to add to
  * @param {number} memberId Member's ID
  */
-function addMAULProfileButton(div: HTMLDivElement, memberId: string | number) {
-    createForumsButton("https://maul.edgegamers.com/index.php?page=home&id=" + memberId, MAUL_BUTTON_TEXT, div);
-}
+// function addMAULProfileButton(div: HTMLDivElement, memberId: string | number) {
+//     createForumsButton("https://maul.edgegamers.com/index.php?page=home&id=" + memberId, MAUL_BUTTON_TEXT, div);
+// }
 
 /**
  * Adds a "List Bans" button to the div
@@ -257,32 +257,32 @@ function generateRedText(top: string, str = "Confidential") {
  * @param {Event} event Event that was called
  */
 
-const profileTooltipListener = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-        if (!mutation.target)
-            continue;
-        const target = mutation.target as HTMLElement;
-        // Make sure this specific event is the node we want
-        if (target.nodeName !== "DIV" || !target.classList.contains("tooltip-content"))
-            continue;
+// const profileTooltipListener = new MutationObserver((mutations) => {
+//     for (const mutation of mutations) {
+//         if (!mutation.target)
+//             continue;
+//         const target = mutation.target as HTMLElement;
+//         // Make sure this specific event is the node we want
+//         if (target.nodeName !== "DIV" || !target.classList.contains("tooltip-content"))
+//             continue;
 
-        // The buttongroup containing the "Follow" button
-        const buttonGroupOne = target.querySelector(".memberTooltip > .memberTooltip-actions > :nth-child(1)") as HTMLElement;
-        if (!buttonGroupOne)
-            continue;
-        buttonGroupOne.querySelector("a")?.href.match(/^https:\/\/www\.edgegamers\.com\/members\/(\d+)\/follow$/);
-        const matches = buttonGroupOne.querySelector("a")?.href.match(/^https:\/\/www\.edgegamers\.com\/members\/(\d+)\/follow$/);
-        // Make sure matches were found, exit gracefully if not.
-        if (!matches)
-            continue;
+//         // The buttongroup containing the "Follow" button
+//         const buttonGroupOne = target.querySelector(".memberTooltip > .memberTooltip-actions > :nth-child(1)") as HTMLElement;
+//         if (!buttonGroupOne)
+//             continue;
+//         buttonGroupOne.querySelector("a")?.href.match(/^https:\/\/www\.edgegamers\.com\/members\/(\d+)\/follow$/);
+//         const matches = buttonGroupOne.querySelector("a")?.href.match(/^https:\/\/www\.edgegamers\.com\/members\/(\d+)\/follow$/);
+//         // Make sure matches were found, exit gracefully if not.
+//         if (!matches)
+//             continue;
 
-        const id = matches[1];
-        // The buttongroup containing the "Start conversation" button
-        const buttonGroupTwo = target.querySelector(".memberTooltip > .memberTooltip-actions > :nth-child(2)");
-        // If the user is banned, buttonGroupTwo will be null. Default to buttonGroupOne.
-        createForumsButton("https://maul.edgegamers.com/index.php?page=home&id=" + id, MAUL_BUTTON_TEXT, (buttonGroupTwo ?? buttonGroupOne) as HTMLDivElement, "_blank", true);
-    }
-});
+//         const id = matches[1];
+//         // The buttongroup containing the "Start conversation" button
+//         const buttonGroupTwo = target.querySelector(".memberTooltip > .memberTooltip-actions > :nth-child(2)");
+//         // If the user is banned, buttonGroupTwo will be null. Default to buttonGroupOne.
+//         createForumsButton("https://maul.edgegamers.com/index.php?page=home&id=" + id, MAUL_BUTTON_TEXT, (buttonGroupTwo ?? buttonGroupOne) as HTMLDivElement, "_blank", true);
+//     }
+// });
 
 /**
  * Moves and auto-fills out the moving prompt for a thread.

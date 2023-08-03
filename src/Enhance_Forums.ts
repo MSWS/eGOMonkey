@@ -64,7 +64,7 @@ declare function GM_xmlhttpRequest(options: GM_xmlhttpRequestOptions): void;
 
 /* eslint-enable no-var, @typescript-eslint/no-explicit-any, camelcase */
 
-// const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
+const MAUL_BUTTON_TEXT = "MAUL"; // Name of the MAUL button
 const MAUL_INSERT_AFTER = 3; // Index for MAUL dropdown menu in NAV
 const MAUL_NAV_MAUL_INDEX = 11; // Nav index to start inserting into
 const BREADCRUMBS_INDEX = 2; // Breadcrumbs offset
@@ -120,9 +120,9 @@ function createForumsButton(href: string, text: string, div: HTMLDivElement, tar
  * @param {HTMLDivElement} div Div to add to
  * @param {number} memberId Member's ID
  */
-// function addMAULProfileButton(div: HTMLDivElement, memberId: string | number) {
-//     createForumsButton("https://maul.edgegamers.com/index.php?page=home&id=" + memberId, MAUL_BUTTON_TEXT, div);
-// }
+function addMAULProfileButton(div: HTMLDivElement, memberId: string | number) {
+    createForumsButton("https://maul.edgegamers.com/index.php?page=home&id=" + memberId, MAUL_BUTTON_TEXT, div);
+}
 
 /**
  * Adds a "List Bans" button to the div
@@ -476,7 +476,7 @@ function checkMAULAuth() {
     // Determine what page we're on
     const url = window.location.href;
 
-    profileTooltipListener.observe(document.body, { childList: true, subtree: true });
+    // profileTooltipListener.observe(document.body, { childList: true, subtree: true });
 
     // Add Helpful Links to the Navigation Bar
     const navList = document.querySelector(".p-nav-list") as HTMLDivElement;
